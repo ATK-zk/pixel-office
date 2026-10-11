@@ -1,6 +1,6 @@
 'use strict';
 // ===== Pixel art toolkit + all hand-built sprites (procedural, original) =====
-const T=16,W=768,H=480,AISLE=300;
+const T=16,W=768,H=576,AISLE=300;
 const OL='#22152a';
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.imageSmoothingEnabled=false;return[c,g]}
 function R(g,x,y,w,h,c){if(w<=0||h<=0)return;g.fillStyle=c;g.fillRect(x|0,y|0,w|0,h|0)}

@@ -92,3 +92,9 @@ body.hudoff #tl,body.hudoff #zoombar,body.hudoff #hint,body.hudoff #vol{opacity:
 #pv{font-size:17px;color:#fff}
 #pc{font-family:'Pixelify Sans','Mali';font-size:12px;margin-top:1px}#pc.up{color:#6dff9a}#pc.dn{color:#ff7a7a}
 #pu{font-size:9.5px;color:#d8c48e;margin-top:1px}
+
+#zoombar{flex-direction:row!important;gap:7px!important;right:8px!important;bottom:calc(env(safe-area-inset-bottom) + 10px)!important}
+#zoombar .rb{width:38px!important;height:38px!important;font-size:16px!important;padding:0}
+#hint{bottom:calc(env(safe-area-inset-bottom) + 56px)!important}
+#vol{bottom:50px!important;right:0!important}
+#bubbles{z-index:2}#board{z-index:1}
