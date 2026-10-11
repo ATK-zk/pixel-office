@@ -297,7 +297,7 @@ function renderTasks(changed){safe(renderBoard,'board');$('upd').textContent='�
 function toast(n,txt){const d=document.createElement('div');d.className='toast';d.style.setProperty('--c',CH[n].col);d.innerHTML=`<b>${n}</b> อัปเดตสถานะ · ${esc(txt)}`;$('toasts').appendChild(d);setTimeout(()=>d.remove(),4300);chime()}
 async function poll(){try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const s=await r.json();const changed=Object.keys(CH).filter(n=>s[n]!==status[n]);
   if(!first)for(const n of changed){toast(n,s[n]);const bt=bots.find(x=>x.n==n);emote(bt,'!');bubs[n].classList.remove('flash');void bubs[n].offsetWidth;bubs[n].classList.add('flash')}
-  status=s;renderTasks(first?[]:changed);fillCard();first=false}catch(e){$('upd').textContent='⚠️ โหลดสถานะไม่ได้'}}
+  status=(typeof liveNorm=='function'?liveNorm(s):s);renderTasks(first?[]:changed);fillCard();first=false}catch(e){$('upd').textContent='⚠️ โหลดสถานะไม่ได้'}}
 if(document.querySelector('.th'))document.querySelector('.th').onclick=()=>{document.querySelector('.tasks').classList.toggle('closed');$('tt').textContent=document.querySelector('.tasks').classList.contains('closed')?'▸':'▾'};
 if(innerWidth<600&&document.querySelector('.tasks')){document.querySelector('.tasks').classList.add('closed');$('tt').textContent='▸'}
 const bubLayer=$('bubbles'),bubs={},tags={};

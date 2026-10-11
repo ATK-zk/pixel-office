@@ -20,7 +20,7 @@ function drawSpark(){const c=$('spark'),g=c.getContext('2d');g.clearRect(0,0,90,
   g.strokeStyle=up?'#5dff9a':'#ff6a6a';g.lineWidth=1.5;g.beginPath();HIST.forEach(([,v],i)=>{const x=1+i/(HIST.length-1)*88,y=20-(v-mn)/(mx-mn)*18;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
 // ---- derived state ----
 function riskOf(s){const r=s.risk||{},st=s.stats||{};return{lev:pick2(r.leverage_used,r.leverage),levMax:pick2(r.max_leverage,r.max)||10,open:pick2(r.open_positions,r.open_trades)||0,openMax:pick2(r.max_positions)||3,
-  loss:pick2(r.mm_bot_daily_loss_usd,r.daily_loss_usd,r.daily_loss)??Math.max(0,-(num(st.pnl)||0)),limit:pick2((r.mm_effective_limits||{}).daily,st.daily_loss_limit,r.daily_loss_limit_usd,r.limit)||25.8,halted:!!r.trading_halted,consec:pick2(r.consec_stops,st.consec_stops)||0}}
+  loss:pick2((r.mm_combined||{}).daily_loss_usd,r.mm_bot_daily_loss_usd,r.daily_loss_usd,r.daily_loss)??Math.max(0,-(num(st.pnl)||0)),limit:pick2((r.mm_effective_limits||{}).comb_daily,(s.stats||{}).daily_loss_limit,(r.mm_effective_limits||{}).daily,st.daily_loss_limit,r.daily_loss_limit_usd,r.limit)||25.8,halted:!!r.trading_halted,consec:pick2(r.consec_stops,st.consec_stops)||0}}
 function lightState(s){const R=riskOf(s);if(R.halted)return'red';const st=(Array.isArray(s.plan)?s.plan:[]).map(p=>String(p.status||'').toLowerCase());if(st.some(x=>x=='open'||x=='filled'||x=='active')||R.open>0)return'green';if(st.some(x=>x=='pending'||x=='placed'))return'yellow';return'off'}
 // ---- render dashboard ----
 let prevStats=null;
@@ -34,7 +34,18 @@ function render(){const s=ST,st=s.stats||{},R=riskOf(s);const v=num(s.portfolio)
   // win/stop detection
   if(prevStats){if((num(st.wins)||0)>(num(prevStats.wins)||0))celebrate();if((num(st.losses)||0)>(num(prevStats.losses)||0)||(num(st.consec_stops)||0)>(num(prevStats.consec_stops)||0))stopFlash()}prevStats=st;
   for(const n in bubs)bubs[n].dataset.t='🕒 '+(s.updated||'—')}
-async function poll2(){try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=await r.json();render();tick()}catch(e){}}
+
+function liveNorm(s){try{const r=s.risk||{},c=r.mm_combined||{},el=r.mm_effective_limits||{};
+ const av=pick2(c.account_value);if(av!=null){s.portfolio=av;if(c.updated)s.portfolio_updated=String(c.updated).replace('T',' ').slice(0,16)}
+ const b0=pick2(c.base_value,el.base);if(b0!=null)s.portfolio_start=b0;
+ const mb=r.mm_bots;const bots=Array.isArray(mb)?mb.filter(Boolean):(mb&&typeof mb=='object'?Object.values(mb):[]);
+ if(bots.length){const sum=(...k)=>{let t=0,any=false;for(const b of bots){const v=pick2(...k.map(x=>b[x]));if(v!=null){t+=v;any=true}}return any?t:null};
+  const tr=sum('trades_today','fills_today','n_trades_today','trades');const old=s.stats||{};
+  s.stats={...old,volume:sum('volume_today_usd','mm_volume_today_usd')??0,fees:sum('fees_today_usd','mm_fees_today_usd')??0,funding:sum('mm_funding_today_usd','funding_today_usd')??0,
+   pnl:sum('pnl_today_usd','mm_pnl_usd')??0,trades:tr,wins:sum('wins_today','wins'),losses:sum('losses_today','losses'),win_rate:null,
+   updated:bots.map(b=>String(b.updated||'')).sort().pop()||old.updated,daily_loss_limit:pick2(el.comb_daily,old.daily_loss_limit)}}
+ }catch(e){}return s}
+async function poll2(){try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=liveNorm(await r.json());render();tick()}catch(e){}}
 poll2();setInterval(poll2,8000);
 // ---- ticker ----
 function evTime(e){if(!e)return null;const t=e.time||e.at||e.when||e.datetime||(typeof e=='string'?(e.match(/\d{4}-\d\d-\d\d[T ]\d\d:\d\d(:\d\d)?([+-]\d\d:?\d\d|Z)?/)||[])[0]:null);if(!t)return null;const u=String(t).trim().replace(' ','T');let d=new Date(/(Z|[+-]\d\d:?\d\d)$/.test(u)?u:u+'+07:00');return isNaN(d)?null:d}
@@ -75,7 +86,7 @@ function planCard(){const pl=Array.isArray(ST.plan)?ST.plan:[];info(`<h3>📈 �
 function picksCard(){const pk=Array.isArray(ST.picks)?ST.picks:[];const bi=b=>/^mm$/i.test(b)?'<span style="color:#7fd0ff">⇄ MM</span>':/long/i.test(b)?'<span class="up">▲ long</span>':/short/i.test(b)?'<span class="dn">▼ short</span>':'<span style="color:#ffd04a">↔ '+esc2(b||'range')+'</span>';
   info(`<h3>🎯 สินทรัพย์ MM ที่ Jane คัด</h3>`+(pk.length?pk.map(p=>`<div class="row"><b>${esc2(p.asset)}</b>${bi(p.bias)}<span>⭐ ${esc2(p.credibility)}/10</span></div><div class="sub">${esc2(p.note)}${p.updated?' · 🕒 '+esc2(String(p.updated).replace('T',' ').slice(5,16)):''}</div>`).join(''):'<div class="sub">ยังไม่มีรายการคัด</div>'))}
 function statsCard(){const s=ST.stats||{};const closed=(num(s.wins)||0)+(num(s.losses)||0);const wr=(num(s.win_rate)!=null&&closed>0)?(+s.win_rate<=1?+s.win_rate*100:+s.win_rate).toFixed(0)+'%':'—';const m=(k,v)=>`<div class="row"><span>${k}</span><b>${v}</b></div>`;
-  info(`<h3>📒 สถิติวันนี้ (Su)</h3>`+m('Volume','$'+(num(s.volume)||0).toLocaleString('en-US'))+m('ค่าธรรมเนียม','$'+(num(s.fees)||0).toFixed(2))+m('Funding','$'+(num(s.funding)||0).toFixed(2))+m('PnL',`<span class="${(num(s.pnl)||0)>=0?'up':'dn'}">$${(num(s.pnl)||0).toFixed(2)}</span>`)+m('เทรด / ชนะ / แพ้',`${num(s.trades)||0} / ${num(s.wins)||0} / ${num(s.losses)||0}`)+m('Win rate',(closed>0&&wr!=='—')?wr:'–')+m('Stop ติดกัน',num(s.consec_stops)||0)+`<div class="sub">🕒 ${esc2(s.updated)}</div>`)}
+  info(`<h3>📒 สถิติวันนี้ (Su)</h3>`+m('Volume','$'+(num(s.volume)||0).toLocaleString('en-US'))+m('ค่าธรรมเนียม','$'+(num(s.fees)||0).toFixed(2))+m('Funding','$'+(num(s.funding)||0).toFixed(2))+m('PnL',`<span class="${(num(s.pnl)||0)>=0?'up':'dn'}">$${(num(s.pnl)||0).toFixed(2)}</span>`)+m('เทรด / ชนะ / แพ้',(num(s.trades)==null?'–':`${num(s.trades)} / ${num(s.wins)??'–'} / ${num(s.losses)??'–'}`))+m('Win rate',(closed>0&&wr!=='—')?wr:'–')+m('Stop ติดกัน',num(s.consec_stops)||0)+`<div class="sub">🕒 ${esc2(s.updated)}</div>`)}
 function pctRows(r){const lp=r.limits_pct;if(!lp||typeof lp!='object')return`<div class="row"><span>ถือได้สูงสุด</span><b>$${esc2(r.max_inventory_usd??r.max_inv??600)}</b></div><div class="row"><span>งบขาดทุน</span><b>$${esc2(r.daily_loss_limit_usd??5)}/วัน · $${esc2(r.weekly_loss_limit_usd??25)}/สัปดาห์</b></div>`;
   const el=r.mm_effective_limits||{},base=+el.base||+r.base_usd||+(ST.portfolio)||0,d=(p)=>'$'+(base*p/100).toFixed(2),
   row=(t,k,v)=>lp[k]==null?'':`<div class="row"><span>${t}</span><b>${lp[k]}% · ${v||d(lp[k])}</b></div>`,f=(x)=>x==null?null:'$'+(+x).toFixed(2);
