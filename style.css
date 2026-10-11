@@ -98,3 +98,9 @@ body.hudoff #tl,body.hudoff #zoombar,body.hudoff #hint,body.hudoff #vol{opacity:
 #hint{bottom:calc(env(safe-area-inset-bottom) + 56px)!important}
 #vol{bottom:50px!important;right:0!important}
 #bubbles{z-index:2}#board{z-index:1}
+/* v11 polish */
+.panel{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 6px 0 #0006,0 0 0 2px #0008,inset 0 1px 0 #fff3,0 10px 30px #0007}
+.rb{transition:transform .12s,filter .12s}.rb:active{transform:translateY(2px) scale(.95);filter:brightness(1.2)}
+.bub{box-shadow:0 3px 0 #0005,0 8px 18px #0004}
+#board{box-shadow:0 4px 0 #0006,0 0 24px #ffcf4a33}
+.toast{animation-timing-function:cubic-bezier(.2,1.4,.4,1)}
