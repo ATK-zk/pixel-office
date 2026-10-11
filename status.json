@@ -1,11 +1,11 @@
 {
- "David": "21:00 เร่งความถี่: breakout 15m SOL/ETH short + BTC สองทาง เสี่ยง 1%/ไม้",
+ "David": "playbook 20:43: breakout 1h SOL short 1.5% · ETH short 0.75%",
  "Kim": "เฝ้าข่าว fee/rebate/ปลดล็อก",
  "Jane": "ข่าว Kim 20:10: ETH/SOL short · BTC funding ติดลบ",
- "updated": "2026-10-11 21:00",
- "Alex": "เขียน playbook 15m แล้ว · stop 1.5×ATR เป้า 1.5R",
- "Jhon": "คุมลิมิต: max 3 ไม้ · ขาดทุน 6%/วัน · lev 10x · funding guard",
- "Su": "ดูผลไม้ 15m",
+ "updated": "2026-10-11 21:05",
+ "Alex": "playbook 20:43 อยู่ในบอทแล้ว",
+ "Jhon": "คุมลิมิต: lev 10x · funding guard",
+ "Su": "ดูผลไม้ breakout",
  "portfolio": 429.82,
  "portfolio_start": 430.53,
  "portfolio_updated": "2026-10-11 20:58",
@@ -362,7 +362,7 @@
    "pause_end": "2026-10-16T19:45:00+07:00"
   }
  ],
- "headline": "playbook 21:00 — breakout 15m SOL/ETH short + BTC สองทาง · ประชุมวันละครั้ง",
+ "headline": "playbook 20:43 — breakout SOL/ETH short · ประชุมวันละครั้ง",
  "plan": [
   {
    "asset": "ETH",
@@ -426,56 +426,39 @@
   "host": "ubuntu-s-1vcpu-512mb-10gb-sgp1"
  },
  "playbook": {
-  "id": "2026-10-11 21:00",
-  "updated_by": "David",
+  "id": "2026-10-11 20:43",
+  "updated_by": "Alex",
   "entries": [
    {
-    "plan": "2026-10-11 21:00",
+    "plan": "2026-10-11 20:43",
     "symbol": "SOL-USD",
     "strategy": "breakout",
     "params": {
-     "interval": "15m",
-     "lookback": 16,
+     "interval": "1h",
+     "lookback": 24,
      "atr_n": 14,
-     "stop_atr": 1.5,
+     "stop_atr": 2.0,
      "rr": 1.5
     },
     "side_bias": "short",
-    "risk_pct": 1.0,
+    "risk_pct": 1.5,
     "enabled": true,
     "valid_until": "2026-10-12T08:35:00+07:00",
     "close_on_remove": false
    },
    {
-    "plan": "2026-10-11 21:00",
+    "plan": "2026-10-11 20:43",
     "symbol": "ETH-USD",
     "strategy": "breakout",
     "params": {
-     "interval": "15m",
-     "lookback": 16,
+     "interval": "1h",
+     "lookback": 24,
      "atr_n": 14,
-     "stop_atr": 1.5,
+     "stop_atr": 2.0,
      "rr": 1.5
     },
     "side_bias": "short",
-    "risk_pct": 1.0,
-    "enabled": true,
-    "valid_until": "2026-10-12T08:35:00+07:00",
-    "close_on_remove": false
-   },
-   {
-    "plan": "2026-10-11 21:00",
-    "symbol": "BTC-USD",
-    "strategy": "breakout",
-    "params": {
-     "interval": "15m",
-     "lookback": 16,
-     "atr_n": 14,
-     "stop_atr": 1.5,
-     "rr": 1.5
-    },
-    "side_bias": "both",
-    "risk_pct": 1.0,
+    "risk_pct": 0.75,
     "enabled": true,
     "valid_until": "2026-10-12T08:35:00+07:00",
     "close_on_remove": false
