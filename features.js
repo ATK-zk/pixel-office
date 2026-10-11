@@ -15,7 +15,7 @@ $('infox').onclick=()=>$('info').classList.add('hidden');
 // ---- sparkline history ----
 let HIST=[];try{HIST=JSON.parse(localStorage.getItem('po_hist')||'[]')}catch(e){}
 function addHist(v){const t=Date.now(),l=HIST[HIST.length-1];if(!l||l[1]!==v||t-l[0]>6e5){HIST.push([t,v]);if(HIST.length>200)HIST.shift();try{localStorage.setItem('po_hist',JSON.stringify(HIST))}catch(e){}}}
-function drawSpark(){const c=$('spark'),g=c.getContext('2d');g.clearRect(0,0,90,22);if(HIST.length<2){g.fillStyle='#8aa4c4';g.font='9px sans-serif';g.fillText('รอข้อมูล…',18,14);return}
+function drawSpark(){const c=$('spark'),g=c.getContext('2d');g.clearRect(0,0,90,22);if(HIST.length<2){g.fillStyle='#ffffff';g.font='bold 13px system-ui,sans-serif';g.textAlign='right';g.fillText('รอข้อมูล…',88,16);g.textAlign='left';return}
   let mn=1e9,mx=-1e9;for(const[,v]of HIST){mn=Math.min(mn,v);mx=Math.max(mx,v)}if(mx-mn<.01){mx+=.5;mn-=.5}const up=HIST[HIST.length-1][1]>=HIST[0][1];
   g.strokeStyle=up?'#5dff9a':'#ff6a6a';g.lineWidth=1.5;g.beginPath();HIST.forEach(([,v],i)=>{const x=1+i/(HIST.length-1)*88,y=20-(v-mn)/(mx-mn)*18;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
 // ---- derived state ----
