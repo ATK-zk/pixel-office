@@ -104,3 +104,7 @@
 2026-10-11 23:15:04 SIGNAL SKIPPED {"key": "NEAR-USD:mean_reversion", "side": "short", "why": "cooldown 30m after close"}
 2026-10-11 23:15:25 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
 2026-10-11 23:15:27 EXIT {"t": "2026-10-11T23:15:27+07:00", "tag": "live", "key": "DOGE-USD:trend_follow", "symbol": "DOGE-USD", "strategy": "trend_follow", "side": "long", "entry": 0.085744, "stop": 0.08678973756225952, "target": null, "exit": 0.08702300000000002, "qty": 5965.0, "pnl": 7.214, "gross": 7.6263, "fees": 0.4122, "funding": 0.032, "reason": "stop", "opened": "2026-10-11T21:45:07+07:00", "risk_usd": 2.149, "r_multiple": 3.357, "why": "EMA9/21 cross", "plan": "2026-10-11 21:05", "interval": "15m"}
+2026-10-11 23:30:02 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4069849865404989,\"ts\":1791736202229}]"}
+2026-10-11 23:30:04 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":8600997468455755,\"ts\":1791736204139,\"arts\":1791736204139}]"}
+2026-10-11 23:30:04 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":962497971965694,\"ts\":1791736204402,\"arts\":1791736204401}]"}
+2026-10-11 23:30:04 ENTRY {"key": "NEAR-USD:mean_reversion", "side": "short", "entry": 5.7517, "qty": 20.97, "stop": 5.854861192268064, "target": 5.41359, "why": "BB(20,2.0) RSI 79.7"}
