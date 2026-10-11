@@ -1,3 +1,11 @@
 2026-10-11 15:32:46 START strategy engine (PAPER) {"limits": {"base": 429.85, "max_risk_pct": 0.02, "lev_trade": 10.0, "lev_total": 15.0, "max_open": 3, "max_open_risk_pct": 0.06, "daily_loss_pct": 0.06, "weekly_loss_pct": 0.15, "max_dd_pct": 0.25, "review_r": -6.0, "review_after_n": 20, "loss_streak": 3, "streak_pause_h": 4, "taker_fee": 0.0004, "maker_fee": 0.000125, "loop_s": 10, "status_every_s": 60, "event_pad_min": 30}}
 2026-10-11 15:32:46 PLAYBOOK {"entries": []}
 2026-10-11 15:32:56 PLAYBOOK {"entries": ["SOL-USD:breakout bias=both risk=2.00%", "BTC-USD:breakout bias=both risk=2.00%"]}
+2026-10-11 15:38:37 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":5576070161056685,\"ts\":1791707917590}]"}
+2026-10-11 15:38:39 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":2999377693524201,\"ts\":1791707919403,\"arts\":1791707919402}]"}
+2026-10-11 15:38:39 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":601917043001277,\"ts\":1791707919620,\"arts\":1791707919619}]"}
+2026-10-11 15:38:39 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
+2026-10-11 15:38:41 RECONCILE: position protected {"key": "SOL-USD:test", "orders": 2}
+2026-10-11 15:38:42 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":1990773173534791,\"ts\":1791707922574}]"}
+2026-10-11 15:38:45 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
+2026-10-11 15:38:46 EXIT {"t": "2026-10-11T15:38:46+07:00", "tag": "test", "key": "SOL-USD:test", "symbol": "SOL-USD", "strategy": "test", "side": "long", "entry": 109.42, "stop": 107.6408, "target": 110.91919999999999, "exit": 109.41, "qty": 0.109, "pnl": -0.0106, "gross": -0.0011, "fees": 0.0095, "funding": -0.0, "reason": "target", "opened": "2026-10-11T15:38:39+07:00", "risk_usd": 0.1939, "r_multiple": -0.055, "why": "live verification", "plan": "test"}
