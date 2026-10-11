@@ -37,11 +37,20 @@ const CH={
   pants:['#1a2c4e','#2c4878','#40669e'],shoe:['#e8e8f0','#ffffff','#ffffff'],accent:['#c0b090','#f0e2c0','#fff'],style:'spiky',phones:1},
  Jane:{role:'นักวิเคราะห์ · ดูกราฟ ประเมินกำไร/ความเสี่ยง',col:'#ff86b8',
   skin:['#d08868','#f8c0a0','#ffdcc4','#fff0e2'],hair:['#4a1a0c','#7e3418','#ac5228','#d8783e'],top:['#9a2a5a','#d8508a','#f478a8','#ffb0cc'],
-  pants:['#241830','#382a4c','#4e3c68'],shoe:['#5a1830','#9a2a48','#c84a68'],accent:['#c09020','#ffd04a','#fff2a0'],style:'long'}};
+  pants:['#241830','#382a4c','#4e3c68'],shoe:['#5a1830','#9a2a48','#c84a68'],accent:['#c09020','#ffd04a','#fff2a0'],style:'long'},
+ Alex:{role:'นักวิเคราะห์ตลาด · อ่านกราฟราคาและ Order Book ของ Polymarket',col:'#ffa64a',look:'Kim',
+  skin:['#c87858','#f0b088','#ffd4b0','#ffe8d4'],hair:['#8a6a1a','#c8a03a','#e8c85a','#fff0a0'],top:['#8a3a10','#d0661e','#f08a3a','#ffb878'],
+  pants:['#22283a','#343e58','#4a5678'],shoe:['#1a0f0a','#3a2414','#5a3a20'],accent:['#c0b090','#f0e2c0','#fff'],style:'spiky'},
+ Jhon:{role:'ผู้จัดการความเสี่ยง · คุมขนาดไม้และจุดตัดขาดทุน',col:'#b0b8c8',look:'David',
+  skin:['#a8664a','#d89a70','#ecb890','#ffd8b8'],hair:['#08060c','#1a1620','#2e2a38','#4a4458'],top:['#2a2c34','#454852','#626672','#8a8e9a'],
+  pants:['#14161c','#22252e','#333744'],shoe:['#0e0a08','#2a1a10','#4a3020'],accent:['#2a3a7a','#3a5ab8','#7a9aff'],style:'short',glasses:1},
+ Su:{role:'นักวิจัย On-chain · แบ็กเทสต์และจดบันทึกเทรด',col:'#b48aff',look:'Jane',
+  skin:['#d08868','#f8c0a0','#ffdcc4','#fff0e2'],hair:['#06040a','#14101c','#2a2236','#463a58'],top:['#3a2458','#6a44a0','#8e66c8','#c4a4f0'],
+  pants:['#1e2a3a','#2e3e56','#425878'],shoe:['#2a1a40','#4a2e6a','#6a4a90'],accent:['#2a8a8a','#4ad0c8','#a0fff0'],style:'long'}};
 const SPR={};
 // dir:0 down,1 up,2 left,3 right ; pose: stand,walk,sit,sip,wave,couch,play
 function charSprite(n,dir,f,pose,blink){const key=n+dir+f+pose+(blink?1:0);if(SPR[key])return SPR[key];
-  const p=CH[n],flip=dir==2;if(flip)dir=3;const[c,g]=mk(26,40);
+  const p=CH[n],L=p.look||n,flip=dir==2;if(flip)dir=3;const[c,g]=mk(26,40);
   const r=(x,y,w,h,col)=>R(g,x,y,w,h,col);const S=p.skin,HR=p.hair,TP=p.top,PN=p.pants,SH=p.shoe;
   const side=dir==3,back=dir==1;
   const bob=pose=='walk'?(f%2?-1:0):pose=='stand'||pose=='sip'?(f%2?1:0):0;const ox=1;
@@ -50,23 +59,23 @@ function charSprite(n,dir,f,pose,blink){const key=n+dir+f+pose+(blink?1:0);if(SP
   if(p.style=='long'&&side){r(4+ox,7+bob,9,17,HR[1]);r(4+ox,7+bob,2,17,HR[0]);r(6+ox,22+bob,6,2,HR[0])}
   // legs
   const sitting=pose=='sit'||pose=='couch';
-  if(pose=='couch'){r(6+ox,26,12,4,PN[1]);r(6+ox,26,12,1,PN[2]);r(7+ox,30,4,4,n=='Jane'?S[1]:PN[1]);r(13+ox,30,4,4,n=='Jane'?S[1]:PN[1]);r(6+ox,34,5,2,SH[1]);r(13+ox,34,5,2,SH[1])}
+  if(pose=='couch'){r(6+ox,26,12,4,PN[1]);r(6+ox,26,12,1,PN[2]);r(7+ox,30,4,4,L=='Jane'?S[1]:PN[1]);r(13+ox,30,4,4,L=='Jane'?S[1]:PN[1]);r(6+ox,34,5,2,SH[1]);r(13+ox,34,5,2,SH[1])}
   else if(!sitting){
     if(side){const a=pose=='walk'?[0,3,0,-3][f]:0;
-      const leg=(x,lift,shade)=>{r(x,26,4,7-lift,shade?PN[0]:PN[1]);if(n=='Jane')r(x,28,4,5-lift,shade?S[0]:S[1]);r(x,33-lift,6,2,shade?SH[0]:SH[1]);r(x+1,33-lift,4,1,SH[2])};
+      const leg=(x,lift,shade)=>{r(x,26,4,7-lift,shade?PN[0]:PN[1]);if(L=='Jane')r(x,28,4,5-lift,shade?S[0]:S[1]);r(x,33-lift,6,2,shade?SH[0]:SH[1]);r(x+1,33-lift,4,1,SH[2])};
       leg(10+ox-a,a<0?1:0,1);leg(10+ox+a,a>0?1:0,0)}
     else{const l1=pose=='walk'?[0,2,0,0][f]:0,l2=pose=='walk'?[0,0,0,2][f]:0;
-      for(const[x,l]of[[7+ox,l1],[13+ox,l2]]){r(x,26,4,7-l,PN[1]);r(x+3,26,1,7-l,PN[0]);if(n=='Jane'){r(x,29,4,4-l,S[1]);r(x+3,29,1,4-l,S[0])}r(x-1+(x>10?1:0),33-l,5,2,SH[1]);r(x+(x>10?1:0),33-l,3,1,SH[2])}}}
+      for(const[x,l]of[[7+ox,l1],[13+ox,l2]]){r(x,26,4,7-l,PN[1]);r(x+3,26,1,7-l,PN[0]);if(L=='Jane'){r(x,29,4,4-l,S[1]);r(x+3,29,1,4-l,S[0])}r(x-1+(x>10?1:0),33-l,5,2,SH[1]);r(x+(x>10?1:0),33-l,3,1,SH[2])}}}
   // torso
   const by=16+bob;
   if(side){r(8+ox,by,9,10,TP[1]);r(8+ox,by,9,1,TP[2]);r(15+ox,by,2,10,TP[0]);r(8+ox,by+9,9,1,TP[0])}
   else{r(6+ox,by,12,10,TP[1]);r(6+ox,by,12,1,TP[2]);r(6+ox,by+1,1,8,TP[2]);r(16+ox,by,2,10,TP[0]);r(6+ox,by+9,12,1,TP[0]);
-    if(n=='Jane'){r(5+ox,by+7,14,4,PN[1]);r(5+ox,by+10,14,1,PN[0]);r(5+ox,by+7,14,1,PN[2])}}
+    if(L=='Jane'){r(5+ox,by+7,14,4,PN[1]);r(5+ox,by+10,14,1,PN[0]);r(5+ox,by+7,14,1,PN[2])}}
   if(!back&&!side){const A=p.accent;
-    if(n=='David'){r(10+ox,by,4,5,'#f4f6fa');r(11+ox,by+1,2,7,A[1]);P(g,11+ox,by+1,A[2]);r(9+ox,by,1,4,TP[0]);r(14+ox,by,1,4,TP[0]);P(g,8+ox,by+3,'#ffd04a')}
-    if(n=='Kim'){r(9+ox,by,6,2,TP[0]);r(9+ox,by+1,1,5,A[1]);r(14+ox,by+1,1,5,A[1]);r(8+ox,by+6,8,3,TP[2]);r(8+ox,by+8,8,1,TP[0]);r(11+ox,by+3,2,2,'#fff')}
-    if(n=='Jane'){r(9+ox,by,6,2,'#fff');r(10+ox,by+2,4,1,'#fff');r(11+ox,by+3,2,2,A[2]);P(g,11+ox,by+3,A[1])}}
-  if(back&&n=='Kim'){r(7+ox,by-1,10,4,TP[2]);r(7+ox,by+2,10,1,TP[0])}
+    if(L=='David'){r(10+ox,by,4,5,'#f4f6fa');r(11+ox,by+1,2,7,A[1]);P(g,11+ox,by+1,A[2]);r(9+ox,by,1,4,TP[0]);r(14+ox,by,1,4,TP[0]);P(g,8+ox,by+3,'#ffd04a')}
+    if(L=='Kim'){r(9+ox,by,6,2,TP[0]);r(9+ox,by+1,1,5,A[1]);r(14+ox,by+1,1,5,A[1]);r(8+ox,by+6,8,3,TP[2]);r(8+ox,by+8,8,1,TP[0]);r(11+ox,by+3,2,2,'#fff')}
+    if(L=='Jane'){r(9+ox,by,6,2,'#fff');r(10+ox,by+2,4,1,'#fff');r(11+ox,by+3,2,2,A[2]);P(g,11+ox,by+3,A[1])}}
+  if(back&&L=='Kim'){r(7+ox,by-1,10,4,TP[2]);r(7+ox,by+2,10,1,TP[0])}
   // arms
   const sw=pose=='walk'?[0,2,0,-2][f]:0;const arm=(x,y,len,dark)=>{r(x,y,3,len,dark?TP[0]:TP[1]);P(g,x,y,TP[2]);r(x,y+len,3,2,S[1]);P(g,x+2,y+len+1,S[0])};
   if(side){if(pose=='play'||pose=='sit'){r(12+ox,by+2,6,3,TP[1]);r(18+ox,by+2,2,3,S[1])}else arm(11+ox,by+1+Math.max(0,sw),6,0)}
@@ -96,7 +105,7 @@ function charSprite(n,dir,f,pose,blink){const key=n+dir+f+pose+(blink?1:0);if(SP
       r(hx+2,hy+3,5,3,HR[1]);r(hx+10,hy+3,4,2,HR[1]);r(hx+3,hy-1,6,1,HR[3]);dith(g,hx+2,hy,11,2,HR[2]);r(hx+12,hy-3,4,3,'#ff6aa0');P(g,hx+13,hy-3,'#ffc0d8')}
     if(blink){r(hx+3,hy+8,3,1,'#2a1a2a');r(hx+10,hy+8,3,1,'#2a1a2a')}
     else{r(hx+3,hy+6,3,4,'#2a1a2a');r(hx+10,hy+6,3,4,'#2a1a2a');P(g,hx+3,hy+6,'#fff');P(g,hx+10,hy+6,'#fff');P(g,hx+5,hy+9,'#5a4a8a');P(g,hx+12,hy+9,'#5a4a8a')}
-    if(n=='Jane'){P(g,hx+2,hy+6,'#2a1a2a');P(g,hx+13,hy+6,'#2a1a2a')}
+    if(L=='Jane'){P(g,hx+2,hy+6,'#2a1a2a');P(g,hx+13,hy+6,'#2a1a2a')}
     r(hx+1,hy+10,3,1,'#ff9aa0');r(hx+12,hy+10,3,1,'#ff9aa0');r(hx+7,hy+11,2,1,'#b0504a');
     if(p.glasses){r(hx+2,hy+5,5,1,'#1a1220');r(hx+9,hy+5,5,1,'#1a1220');r(hx+2,hy+5,1,5,'#1a1220');r(hx+6,hy+5,1,5,'#1a1220');r(hx+9,hy+5,1,5,'#1a1220');r(hx+13,hy+5,1,5,'#1a1220');r(hx+7,hy+6,2,1,'#1a1220');P(g,hx+4,hy+6,'#cfe8ff')}}
   if(p.phones){const PH=['#145a30','#22c46a','#7af0a8'];if(side){r(hx+6,hy+4,4,5,PH[1]);P(g,hx+7,hy+5,PH[2]);r(hx+6,hy-2,4,1,'#2b2233')}

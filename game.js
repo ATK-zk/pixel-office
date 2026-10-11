@@ -18,7 +18,7 @@ function buildBG(){
   carpet(0,316,184,H,['#22305a','#2e4278','#40589a']);carpet(604,72,W,H,['#7a4a32','#9a6040','#b47a54']);
   planks(0,300,W,316,PAL.woodD);R(b,0,300,W,1,'#0006');R(b,0,315,W,1,'#0004');
   // rugs
-  rug(250,350,290,110,PAL.red,['#c88a3a','#e0a84a','#f4c870'],PAL.red);rug(630,330,124,90,PAL.teal,PAL.cream,PAL.teal);rug(20,370,150,80,PAL.cream,PAL.blue,PAL.yellow);
+  rug(250,440,290,36,PAL.red,['#c88a3a','#e0a84a','#f4c870'],PAL.red);rug(630,330,124,90,PAL.teal,PAL.cream,PAL.teal);rug(20,370,150,80,PAL.cream,PAL.blue,PAL.yellow);
   // wall
   const wg=b.createLinearGradient(0,0,0,72);wg.addColorStop(0,'#e6d2a8');wg.addColorStop(1,'#d4bc8c');b.fillStyle=wg;b.fillRect(0,0,W,58);
   for(let x=0;x<W;x+=16){R(b,x,0,1,58,'#cdb482');for(let y=6;y<56;y+=14)P(b,x+8,y+((x/16)%2)*7,'#c2a676')}
@@ -57,15 +57,19 @@ function makeDesk(left,bottom,w,who){const[c,g]=mk(w+4,58);const x=2,y=24;
   box(g,x,y+16,w,12,PAL.wood);R(g,x+1,y+17,w-2,1,PAL.wood[3]);const n=w>76?3:2,dw=(w-12)/n;
   for(let i=0;i<n;i++){const dx=x+6+i*dw;R(g,dx,y+19,dw-4,7,PAL.wood[0]);R(g,dx+1,y+20,dw-6,5,PAL.wood[1]);R(g,dx+dw/2-4,y+22,4,1,PAL.yellow[2])}
   R(g,x+1,y+28,3,5,PAL.woodD[1]);R(g,x+w-4,y+28,3,5,PAL.woodD[1]);
-  const glow={David:'#9ad0ff',Kim:'#7fe0ff',Jane:'#8affb0'}[who];
+  const glow={David:'#9ad0ff',Kim:'#7fe0ff',Jane:'#8affb0',Alex:'#ffd08a',Jhon:'#ff9a9a',Su:'#c8a8ff'}[who];
   if(who=='Kim'){monitorBack(g,x+4,y-10,20,14,glow);monitorBack(g,x+w-24,y-10,20,14,glow);box(g,x+30,y+9,9,5,PAL.dark);R(g,x+31,y+10,7,3,'#7fe0ff');box(g,x+44,y+8,12,6,PAL.white)}
   if(who=='Jane'){monitorBack(g,x+2,y-8,16,12,glow);monitorBack(g,x+w/2-9,y-12,18,15,glow);monitorBack(g,x+w-18,y-8,16,12,glow);box(g,x+4,y+10,6,4,PAL.white);R(g,x+5,y+10,4,1,'#6b3a1a')}
+  if(who=='Alex'){monitorBack(g,x+1,y-9,15,12,glow);monitorBack(g,x+18,y-14,16,13,glow);monitorBack(g,x+36,y-14,16,13,glow);monitorBack(g,x+54,y-9,15,12,glow)}
+  if(who=='Jhon'){monitorBack(g,x+w-26,y-10,22,14,glow);box(g,x+6,y+6,10,12,PAL.dark);R(g,x+7,y+7,8,3,'#9ae0a0');for(let i=0;i<3;i++)for(let j=0;j<3;j++)R(g,x+7+i*3,y+11+j*2,2,1,PAL.metal[3]);
+    box(g,x+22,y-6,10,12,PAL.blue);R(g,x+26,y-4,2,8,PAL.yellow[2]);R(g,x+24,y-1,6,2,PAL.yellow[2]);R(g,x+23,y+5,8,1,PAL.blue[0])}
+  if(who=='Su'){monitorBack(g,x+4,y-10,20,14,glow);monitorBack(g,x+28,y-10,18,14,glow);box(g,x+50,y+7,16,8,PAL.cream);R(g,x+57,y+7,1,8,PAL.cream[0]);box(g,x+6,y+9,8,5,PAL.purple)}
   if(who=='David'){monitorBack(g,x+10,y-10,24,15,glow);box(g,x+46,y+8,14,6,PAL.white);R(g,x+47,y+9,12,1,'#aab');box(g,x+64,y+5,6,8,PAL.white);R(g,x+65,y+5,4,1,'#6b3a1a');box(g,x+w-10,y+2,5,9,PAL.yellow);R(g,x+w-11,y+1,7,2,PAL.yellow[2]);R(g,x+36,y+10,8,3,PAL.yellow[1])}
   outline(c);PROPS.push({x:left,y:bottom,c,ox:2,oy:58,who});}
 function prop2(x,y,w,h,ox,oy,draw,extra){const[c,g]=mk(w,h);draw(g,w,h);outline(c);PROPS.push(Object.assign({x,y,c,ox,oy},extra||{}))}
 function buildProps(){
-  makeDesk(344,190,84,'David');makeDesk(222,262,70,'Kim');makeDesk(512,262,70,'Jane');
-  const ch=(x,y,col)=>{const p=chairProp(col);PROPS.push({x,y,c:outline(p.c),ox:p.ox,oy:p.oy})};ch(386,160,'blue');ch(257,232,'green');ch(547,232,'pink');
+  makeDesk(344,190,84,'David');makeDesk(222,262,70,'Kim');makeDesk(512,262,70,'Jane');makeDesk(222,412,70,'Alex');makeDesk(362,412,70,'Jhon');makeDesk(502,412,70,'Su');
+  const ch=(x,y,col)=>{const p=chairProp(col);PROPS.push({x,y,c:outline(p.c),ox:p.ox,oy:p.oy})};ch(386,160,'blue');ch(257,232,'green');ch(547,232,'pink');ch(257,382,'yellow');ch(397,382,'metal');ch(537,382,'purple');
   // pantry counter (against wall)
   prop2(0,94,184,50,0,50,(g)=>{box(g,1,22,176,26,PAL.wood);box(g,1,16,176,7,PAL.white);for(let x=6;x<170;x+=29){R(g,x,27,25,18,PAL.wood[0]);R(g,x+1,28,23,16,PAL.wood[1]);R(g,x+18,34,3,3,PAL.yellow[2])}
     // coffee machine
@@ -95,20 +99,18 @@ function buildProps(){
   prop2(690,440,40,16,20,14,(g)=>{box(g,2,2,36,8,PAL.oak);R(g,4,10,2,4,PAL.woodD[1]);R(g,34,10,2,4,PAL.woodD[1]);box(g,8,0,8,4,PAL.white);ell(g,28,4,4,2,PAL.green[2])});
   prop2(730,300,36,34,18,34,(g)=>{box(g,2,2,32,22,['#2a6a9a','#4aa0d0','#8ad8f0','#e0f8ff']);dith(g,4,14,28,8,'#2a7aa8');R(g,8,18,6,4,'#3f9a52');R(g,20,16,3,6,'#3f9a52');box(g,2,24,32,8,PAL.dark)},{fish:1});
   // chill zone: beanbags, printer, cabinets
-  const bean=(x,c)=>prop2(x,416,30,24,15,22,(g)=>{ell(g,15,13,14,9,c[1]);ell(g,13,10,10,6,c[2]);ell(g,11,8,5,3,c[3]);ell(g,16,18,13,4,c[0])});bean(330,PAL.yellow);bean(460,PAL.purple);
-  prop2(240,340,30,30,0,30,(g)=>{box(g,1,8,28,20,PAL.white);box(g,4,2,22,8,PAL.metal);R(g,6,12,18,2,'#333');R(g,22,22,3,2,'#3fe07a');box(g,6,0,18,3,PAL.white)});
-  prop2(560,350,34,40,0,40,(g)=>{for(let i=0;i<3;i++){box(g,1,2+i*12,32,11,PAL.metal);R(g,12,6+i*12,10,2,PAL.metal[3])}});
+  const bean=(x,c)=>prop2(x,416,30,24,15,22,(g)=>{ell(g,15,13,14,9,c[1]);ell(g,13,10,10,6,c[2]);ell(g,11,8,5,3,c[3]);ell(g,16,18,13,4,c[0])});
   // plants & lamps
-  for(const[x,y,k]of[[200,96,1],[586,96,0],[166,282,0],[620,284,2],[200,470,2],[588,470,1],[264,456,0],[16,300,1],[12,470,0],[756,470,2],[608,104,0]]){const p=plantProp(k);PROPS.push({x,y,c:p.c,ox:p.ox,oy:p.oy})}
-  for(const[x,y]of[[312,150],[470,226],[214,170],[640,240],[28,360],[520,430]]){const p=lampProp();PROPS.push({x,y,c:outline(p.c),ox:p.ox,oy:p.oy,lamp:1})}
+  for(const[x,y,k]of[[200,96,1],[586,96,0],[166,282,0],[620,284,2],[200,470,2],[588,470,1],[316,470,0],[476,470,2],[16,300,1],[12,470,0],[756,470,2],[608,104,0]]){const p=plantProp(k);PROPS.push({x,y,c:p.c,ox:p.ox,oy:p.oy})}
+  for(const[x,y]of[[312,150],[470,226],[214,170],[640,240],[28,360],[470,330]]){const p=lampProp();PROPS.push({x,y,c:outline(p.c),ox:p.ox,oy:p.oy,lamp:1})}
 }
 // ================= SPOTS / BOTS =================
-const SEAT={David:{x:386,y:164,ex:446},Kim:{x:257,y:236,ex:307},Jane:{x:547,y:236,ex:497}};
+const SEAT={David:{x:386,y:164,ex:446},Kim:{x:257,y:236,ex:307},Jane:{x:547,y:236,ex:497},Alex:{x:257,y:386,ex:314},Jhon:{x:397,y:386,ex:447},Su:{x:537,y:386,ex:587}};
 const SPOTS=[
  {x:44,y:104,ex:44,dir:1,pose:'sip',say:'☕ ชงกาแฟ',steam:1},{x:120,y:152,ex:120,dir:1,pose:'sip',say:'💧 กดน้ำดื่ม'},
  {x:96,y:236,ex:96,dir:1,pose:'sip',say:'🍪 พักกินขนม'},{x:300,y:96,ex:300,dir:1,pose:'stand',say:'🌆 ดูวิวเมือง'},
  {x:644,y:116,ex:644,dir:1,pose:'stand',say:'📚 หาหนังสืออ่าน'},{x:742,y:142,ex:742,dir:1,pose:'play',say:'🕹️ เล่นเกมตู้'},
- {x:676,y:400,ex:760,dir:0,pose:'couch',say:'🛋️ พักบนโซฟา'},{x:330,y:420,ex:330,dir:0,pose:'couch',say:'😌 นอนบีนแบ็ก'},
+ {x:676,y:400,ex:760,dir:0,pose:'couch',say:'🛋️ พักบนโซฟา'},
  {x:110,y:434,ex:170,dir:1,pose:'stand',say:'🗂️ เตรียมห้องประชุม'},{x:748,y:318,ex:748,dir:1,pose:'stand',say:'🐟 ให้อาหารปลา'}];
 const bots=Object.keys(CH).map((n,i)=>({n,x:SEAT[n].x,y:SEAT[n].y,dir:0,state:'work',t:6+i*7+Math.random()*8,path:[],f:0,ft:0,say:null,pose:'sit',blink:0,bt:2+Math.random()*3,emote:null}));
 function route(bt,from,to){bt.path=[{x:from.ex,y:from.y},{x:from.ex,y:AISLE+6},{x:to.ex,y:AISLE+6},{x:to.ex,y:to.y},{x:to.x,y:to.y}]}
@@ -138,7 +140,7 @@ function puff(x,y){parts.push({x,y,vx:(Math.random()-.5)*3,vy:-8-Math.random()*4
 const motes=Array.from({length:26},(_,i)=>({x:Math.random()*W,y:80+Math.random()*380,s:Math.random()*6.28,v:2+Math.random()*3}));
 // ================= LIGHTING =================
 let time=0,nightK=0,lightC=null,glowC=null,skyKey='';
-const LIGHTS=[[312,104,70,'255,196,110'],[470,180,66,'255,196,110'],[214,124,60,'255,196,110'],[640,194,62,'255,196,110'],[28,314,58,'255,196,110'],[520,384,64,'255,196,110'],
+const LIGHTS=[[312,104,70,'255,196,110'],[470,180,66,'255,196,110'],[214,124,60,'255,196,110'],[640,194,62,'255,196,110'],[28,314,58,'255,196,110'],[470,300,60,'255,196,110'],[257,372,32,'255,210,140'],[397,372,32,'255,150,150'],[537,372,32,'200,170,255'],
  [386,150,34,'140,210,255'],[257,222,32,'120,230,255'],[547,222,34,'140,255,180'],[742,90,36,'200,120,255'],[690,452,40,'120,190,255'],[518,32,46,'120,190,255'],[748,286,30,'90,200,255'],[44,72,22,'255,160,90']];
 function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function nightness(h){if(h>=7&&h<17)return 0;if(h>=19||h<5)return 1;if(h>=17)return(h-17)/2;return 1-(h-5)/2}
@@ -176,6 +178,9 @@ function drawScreens(g){// wall TV news + chart ticker
 function drawPropDyn(g,p){
   if(p.who=='Jane'){const x=p.x+48,y=p.y-24;box(g,x,y,18,10,PAL.dark);R(g,x+1,y+1,16,8,'#0d1d16');let py=y+5;for(let i=0;i<15;i++){const ny=y+5+Math.round(Math.sin(time*1.6+i*.7)*2.5);R(g,x+2+i,Math.min(py,ny),1,Math.abs(ny-py)+1,ny<py?'#3fe07a':'#ff5a6a');py=ny}}
   if(p.who=='Kim'){const x=p.x+33,y=p.y-24;for(let i=0;i<2;i++)R(g,x,y+((time*6+i*2)%3|0),5,1,'#fff')}
+  if(p.who=='Alex'){const x=p.x+20,y=p.y-24;box(g,x,y,26,10,PAL.dark);R(g,x+1,y+1,24,8,'#101420');let py=y+5;for(let i=0;i<12;i++){const ny=y+5-Math.round(Math.sin(time*.5+i*.5)*2+Math.sin(i*1.1)*1);R(g,x+2+i,Math.min(py,ny),1,Math.abs(ny-py)+1,'#4a9aff');py=ny}
+    for(let k=0;k<4;k++){const wb=2+Math.round(4*Math.abs(Math.sin(time*.9+k))),wa=2+Math.round(4*Math.abs(Math.cos(time*.7+k*1.3)));R(g,x+15,y+1+k*2,wb,1,'#3fe07a');R(g,x+24-wa,y+1+k*2,wa,1,'#ff5a6a')}}
+  if(p.who=='Su'){const x=p.x+52,y=p.y-24;for(let i=0;i<3;i++)R(g,x+9,y+2+i*2,(i==2?(time*3%5|0):5),1,'#5a4a8a');R(g,x+10+((time*3)%5),y+5,1,2,'#e84a4a')}
   if(p.arcade){const x=p.x-15+6,y=p.y-60+14;for(let i=0;i<18;i++)for(let j=0;j<14;j+=2){if(((i+j*3+Math.floor(time*8))%11)<1)P(g,x+i,y+j,['#ff4a8a','#4af0ff','#ffe04a'][(i+j)%3])}R(g,x+8+Math.sin(time*3)*6,y+10,3,3,'#ffe04a')}
   if(p.fish){const x=p.x-18+4,y=p.y-34+4;for(let i=0;i<2;i++){const fx=x+4+((time*(6+i*4)+i*10)%24),fy=y+5+i*5+Math.sin(time*2+i)*1.5;R(g,fx,fy,3,2,i?'#ffa03a':'#ff5a8a');P(g,fx-1,fy,'#ffd04a')}if(Math.sin(time*3)>.9)P(g,x+20,y+2+((time*10)%10),'#fff')}}
 function drawEmote(g,bt){const e=bt.emote,sc=Math.min(1,e.t*6),bob=Math.sin(e.t*8)*1,x=Math.round(bt.x),y=Math.round(bt.y-46-(bt.pose=='sit'?2:0)+bob-(1-sc)*4);
@@ -204,7 +209,7 @@ function homeCam(){return vw<600?{z:1.15,x:402,y:220}:{z:Math.max(Math.min(vw/W,
 function clampC(c){const L=limits();c.z=Math.max(L.min,Math.min(L.max,c.z));const hw=vw/2/c.z,hh=vh/2/c.z;c.x=hw*2>=W?W/2:Math.max(hw,Math.min(W-hw,c.x));c.y=hh*2>=H?H/2:Math.max(hh,Math.min(H-hh,c.y));return c}
 function flyTo(o){Object.assign(tcam,clampC(Object.assign({},cam,o)));ease=true}
 function resetCam(){flyTo(homeCam())}
-function resize(){dpr=Math.min(window.devicePixelRatio||1,3);vw=innerWidth;vh=innerHeight;cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);if(!resize.done){Object.assign(cam,homeCam());resize.done=1}clampC(cam)}
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);vw=innerWidth;vh=innerHeight;cv.width=Math.round(vw*dpr);cv.height=Math.round(vh*dpr);if(!resize.done){Object.assign(cam,homeCam());resize.done=1}clampC(cam)}
 const toWorld=(sx,sy)=>({x:cam.x+(sx-vw/2)/cam.z,y:cam.y+(sy-vh/2)/cam.z});
 const toScreen=(x,y)=>({x:(x-cam.x)*cam.z+vw/2,y:(y-cam.y)*cam.z+vh/2});
 function zoomAt(sx,sy,nz){ease=false;const a=toWorld(sx,sy);const L=limits();cam.z=Math.max(L.min,Math.min(L.max,nz));const c=toWorld(sx,sy);cam.x+=a.x-c.x;cam.y+=a.y-c.y;clampC(cam)}
@@ -235,10 +240,9 @@ let stepC=0;function stepSound(){if(snd&&AC&&(++stepC%6==0))tone(120+Math.random
 function sndUI(){$('snd').textContent=snd?'🔊':'🔇'}sndUI();
 $('snd').onclick=()=>{snd=!snd;localStorage.setItem('po_snd',snd?'1':'0');audioInit();sndUI();blip(700)};
 // ================= UI =================
-let status={David:'',Kim:'',Jane:'',updated:''},cardFor=null,first=true;
+let status={updated:''},cardFor=null,first=true;
 function drawAv(cvs,n){const g=cvs.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,cvs.width,cvs.height);const s=charSprite(n,0,0,'stand');
   if(cvs.width==12)g.drawImage(s,6,1,14,12,0,0,12,12);else g.drawImage(s,1,0,24,26,0,0,24,26)}
-document.querySelectorAll('.mav').forEach(c=>drawAv(c,c.dataset.n));drawAv($('meav'),'David');
 function showCard(n){cardFor=n;drawAv($('avatar'),n);$('cname').textContent=n;$('cname').style.color=CH[n].col;$('crole').textContent=CH[n].role;fillCard();$('card').classList.remove('hidden')}
 function fillCard(){if(!cardFor)return;const bt=bots.find(x=>x.n==cardFor);$('cstat').textContent='📌 '+(status[cardFor]||'—');$('cact').textContent='ตอนนี้: '+(bt.say||(bt.pose=='sip'?'☕ จิบกาแฟที่โต๊ะ':'💻 ทำงานที่โต๊ะ'));$('ctime').textContent='🕒 อัปเดตล่าสุด '+(status.updated||'—')}
 function hideCard(){cardFor=null;$('card').classList.add('hidden')}$('cardx').onclick=hideCard;
@@ -267,17 +271,21 @@ function placeDom(){for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const
   if(B._h!==html){B.innerHTML=html;B._h=html;B._w=B.offsetWidth;B._hh=B.offsetHeight}
   const p=toScreen(bt.x,bt.y-(bt.pose=='sit'?42:40)-(bt.emote?14:0));const w=B._w||100,h=B._hh||30;let x=p.x-w/2,y=p.y-h-8;
   const cx=Math.max(6,Math.min(vw-w-6,x)),cy=Math.max(6,Math.min(vh-h-6,y));B.style.setProperty('--tx',Math.max(-w/2+10,Math.min(w/2-10,x-cx))+'px');
-  B.style.transform=`translate(${cx|0}px,${cy|0}px)`;const vis=cam.z>=1.05&&p.x>4&&p.x<vw-4&&p.y>10&&p.y<vh+40;B.style.opacity=vis?1:0;
+  B.style.transform=`translate(${cx|0}px,${cy|0}px)`;const vis=cam.z>=1.05&&p.x>4&&p.x<vw-4&&p.y>10&&p.y<vh+40;B.style.opacity=vis?1:0;B.style.zIndex=Math.round(bt.y);
   const q=toScreen(bt.x,bt.y+3);tg.style.transform=`translate(${(q.x-(tg._w||(tg._w=tg.offsetWidth))/2)|0}px,${q.y|0}px)`;tg.style.opacity=cam.z>=1.05?1:0}}
-function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;update(dt);
+var frame=function(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;update(dt);
   if(ease){for(const k of['x','y','z'])cam[k]+=(tcam[k]-cam[k])*Math.min(1,dt*8);clampC(cam);if(Math.abs(tcam.z-cam.z)<.002&&Math.hypot(tcam.x-cam.x,tcam.y-cam.y)<.2)ease=false}
   else if(!ptrs.size&&(Math.abs(vel.x)+Math.abs(vel.y))>.05){cam.x-=vel.x;cam.y-=vel.y;vel.x*=.9;vel.y*=.9;clampC(cam)}
   drawWorld();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#120c08';ctx.fillRect(0,0,cv.width,cv.height);ctx.imageSmoothingEnabled=false;
   const s=cam.z*dpr;ctx.setTransform(s,0,0,s,Math.round((vw/2-cam.x*cam.z)*dpr),Math.round((vh/2-cam.y*cam.z)*dpr));ctx.drawImage(world,0,0);
   placeDom();if((mt+=dt)>.2){mt=0;drawMini()}requestAnimationFrame(frame)}
 // ================= INIT =================
-buildBG();buildCity();buildProps();
-// bake prop shadows into bg
-for(const p of PROPS){if(p.c.width>4)softShadow(b,p.x-p.ox+p.c.width/2,p.y-2,p.c.width*.45,4,.3)}
-mbgG.imageSmoothingEnabled=true;drawSky(wx);wx.drawImage(bg,0,0);drawSky(wx);for(const p of PROPS)wx.drawImage(p.c,p.x-p.ox,p.y-p.oy);mbgG.drawImage(world,0,0,W/4,H/4);
-addEventListener('resize',resize);resize();tickClock();setInterval(tickClock,1000);renderTasks([]);poll();setInterval(poll,8000);drawMini();requestAnimationFrame(frame);
+function safe(f,l){try{f()}catch(e){console.error('init '+l,e);window.__err=(window.__err||'')+l+': '+e.message+'\n'}}
+safe(tickClock,'clock');safe(()=>{renderTasks([]);poll();setInterval(poll,8000)},'status');setInterval(()=>safe(tickClock,'clock'),1000);
+safe(buildBG,'bg');safe(buildCity,'city');safe(buildProps,'props');
+safe(()=>{for(const p of PROPS){if(p.c.width>4)softShadow(b,p.x-p.ox+p.c.width/2,p.y-2,p.c.width*.45,4,.3)}},'shadows');
+safe(()=>{mbgG.imageSmoothingEnabled=true;wx.drawImage(bg,0,0);drawSky(wx);for(const p of PROPS)wx.drawImage(p.c,p.x-p.ox,p.y-p.oy);mbgG.drawImage(world,0,0,W/4,H/4)},'minibg');
+safe(()=>{document.querySelectorAll('.mav').forEach(c=>drawAv(c,c.dataset.n));drawAv($('meav'),'David')},'avatars');
+addEventListener('resize',resize);safe(resize,'resize');safe(drawMini,'mini');
+const _frame=frame;let ferr=0;frame=function(now){try{_frame(now)}catch(e){if(ferr++<3)console.error('frame',e);requestAnimationFrame(frame)}};
+requestAnimationFrame(frame);
