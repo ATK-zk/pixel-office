@@ -139,20 +139,23 @@ drawWorld=function(){const g=ig,dt=1/60;
   // lighting projected onto the floor + glows
   g.setTransform(...FLOOR);g.drawImage(lightC,0,72,W,H-72,0,72,W,H-72);g.globalCompositeOperation='lighter';g.drawImage(glowC,0,72,W,H-72,0,72,W,H-72);g.setTransform(1,0,0,1,0,0);
   for(const bt of bots){if(bt.hidden||bt.state!='work')continue;const q=I(bt.x,bt.y,26),fl=.18+.07*Math.sin(time*7+bt.x)+(Math.random()<.03?.1:0);const gr=g.createRadialGradient(q.x,q.y,0,q.x,q.y,22);gr.addColorStop(0,`rgba(${GLOWCOL[bt.n]},${fl*(.6+nightK)})`);gr.addColorStop(1,`rgba(${GLOWCOL[bt.n]},0)`);g.fillStyle=gr;g.fillRect(q.x-22,q.y-22,44,44)}
-  const tv=I(518,72,62),tg=g.createRadialGradient(tv.x,tv.y,0,tv.x,tv.y,70);tg.addColorStop(0,`rgba(90,170,255,${.08+.04*Math.sin(time*2)+nightK*.12})`);tg.addColorStop(1,'rgba(90,170,255,0)');g.fillStyle=tg;g.fillRect(tv.x-70,tv.y-70,140,140);
+  const tv=I(510,72,58),tg=g.createRadialGradient(tv.x,tv.y,0,tv.x,tv.y,70);tg.addColorStop(0,`rgba(90,170,255,${.08+.04*Math.sin(time*2)+nightK*.12})`);tg.addColorStop(1,'rgba(90,170,255,0)');g.fillStyle=tg;g.fillRect(tv.x-70,tv.y-70,140,140);
   for(const m of motes){m.y-=m.v*.016;m.x+=Math.sin(time+m.s)*.1;if(m.y<90){m.y=470;m.x=Math.random()*W}const q=I(m.x,m.y,30+20*Math.sin(m.s));g.globalAlpha=(.25+.25*Math.sin(time*2+m.s))*(nightK>.6?.5:1);P(g,q.x,q.y,'#fff4c0')}
   g.globalAlpha=1;g.globalCompositeOperation='source-over';g.drawImage(vig,0,0)};
 // ---- camera, picking, DOM overlays in iso space ----
 limits=function(){const fit=Math.min(vw/IW,vh/IH);return{min:fit*.95,max:6}};
-homeCam=function(){const c=I(450,320);return vw<600?{z:Math.max(0.78,vw/560),x:c.x,y:c.y-10}:{z:Math.max(Math.min(vw/IW,vh/IH)*1.06,.5),x:IW/2,y:IH/2-6}};
+homeCam=function(){const c=I(540,230);return vw<600?{z:Math.max(0.78,vw/560),x:c.x,y:c.y-10}:{z:Math.max(Math.min(vw/IW,vh/IH)*1.06,.5),x:IW/2,y:IH/2-6}};
 clampC=function(c){const L=limits();c.z=Math.max(L.min,Math.min(L.max,c.z));const hw=vw/2/c.z,hh=vh/2/c.z;c.x=hw*2>=IW?IW/2:Math.max(hw,Math.min(IW-hw,c.x));c.y=hh*2>=IH?IH/2:Math.max(hh,Math.min(IH-hh,c.y));return c};
 $('bfit').onclick=()=>{flyTo({z:0,x:IW/2,y:IH/2});blip(520)};
 focusBot=function(n){const bt=bots.find(x=>x.n==n),q=I(bt.x,bt.y);flyTo({z:Math.max(cam.z,2.6),x:q.x,y:q.y-20});showCard(n);blip(780)};
 document.querySelectorAll('[data-f]').forEach(el=>el.onclick=()=>focusBot(el.dataset.f));
 hit=function(sx,sy){const w=toWorld(sx,sy);let best=null,bd=1e9;for(const bt of bots){if(bt.hidden)continue;const q=I(bt.x,bt.y),dx=w.x-q.x,dy=w.y-(q.y-18);if(Math.abs(dx)<14&&Math.abs(dy)<22){const d=dx*dx+dy*dy;if(d<bd){bd=d;best=bt}}}
   if(best){showCard(best.n);emote(best,'♪');blip(880);return}hideCard()};
-placeBoard=function(){const B=$('board');const c=I(590,322),p=toScreen(c.x,c.y+4);const sc=Math.max(.4,Math.min(1.8,cam.z/1.5));const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
-  B.style.transformOrigin='50% 100%';B.style.transform=`translate(${(p.x-w/2)|0}px,${(p.y-h)|0}px) scale(${sc.toFixed(3)})`};
+$('board').classList.add('wall');
+const TVR=[440,8,140,46];
+const _ds0=drawScreens;drawScreens=function(g){_ds0(g);R(g,436,4,148,54,'#e6eaee');box(g,TVR[0],TVR[1],TVR[2],TVR[3],PAL.dark);R(g,TVR[0]+2,TVR[1]+2,TVR[2]-4,TVR[3]-4,'#09111d')};
+placeBoard=function(){const B=$('board');const a=I(TVR[0],72,(72-TVR[1])*WALLH/72),p=toScreen(a.x,a.y);const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
+  const s=(TVR[2]*cam.z)/w,sy=(TVR[3]*WALLH/72*cam.z)/h;B.style.transform=`translate(${p.x|0}px,${p.y|0}px) matrix(${s.toFixed(4)},${(s*.5).toFixed(4)},0,${sy.toFixed(4)},0,0)`};
 placeDom=function(){placeBoard();for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=bt.say||status[bt.n]||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
   if(B._h!==html){B.innerHTML=html;B._h=html;B._w=B.offsetWidth;B._hh=B.offsetHeight}
   const q=I(bt.x,bt.y),p=toScreen(q.x,q.y-(bt.pose=='sit'?42:40)-(bt.emote?14:0));const w=B._w||100,h=B._hh||30;let x=p.x-w/2,y=p.y-h-8;
