@@ -1,2 +1,3 @@
 2026-10-11 15:32:46 START strategy engine (PAPER) {"limits": {"base": 429.85, "max_risk_pct": 0.02, "lev_trade": 10.0, "lev_total": 15.0, "max_open": 3, "max_open_risk_pct": 0.06, "daily_loss_pct": 0.06, "weekly_loss_pct": 0.15, "max_dd_pct": 0.25, "review_r": -6.0, "review_after_n": 20, "loss_streak": 3, "streak_pause_h": 4, "taker_fee": 0.0004, "maker_fee": 0.000125, "loop_s": 10, "status_every_s": 60, "event_pad_min": 30}}
 2026-10-11 15:32:46 PLAYBOOK {"entries": []}
+2026-10-11 15:32:56 PLAYBOOK {"entries": ["SOL-USD:breakout bias=both risk=2.00%", "BTC-USD:breakout bias=both risk=2.00%"]}
