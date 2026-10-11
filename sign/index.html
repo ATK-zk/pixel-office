@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>อนุญาต David เทรด Polymarket Perps</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;background:#14161c;color:#eee;max-width:640px;margin:0 auto;padding:18px;line-height:1.55}
+h1{font-size:1.3em}.box{background:#1f232c;border-radius:12px;padding:14px;margin:12px 0}
+.ok{border-left:4px solid #3ecf8e}.warn{border-left:4px solid #f5a524}
+button{font-size:1.05em;padding:12px 18px;border-radius:10px;border:0;background:#3b82f6;color:#fff;width:100%;margin:6px 0}
+button:disabled{background:#555}code,textarea{font-family:ui-monospace,monospace;font-size:.85em;word-break:break-all}
+textarea{width:100%;height:150px;background:#0d0f13;color:#9fe;border:1px solid #333;border-radius:8px;padding:8px;box-sizing:border-box}
+#err{color:#ff7b7b}
+</style></head><body>
+<h1>🔑 อนุญาตให้ David เทรด Polymarket Perps แทนคุณ</h1>
+<div class="box ok">
+<b>หน้านี้ทำอะไร:</b> ขอให้กระเป๋าของคุณ <b>เซ็นข้อความ</b> 1 ครั้ง (ไม่ใช่ธุรกรรม ไม่เสียค่าแก๊ส ไม่โอนเงิน) เพื่ออนุญาต "proxy key" ของ David ให้วางและยกเลิกออร์เดอร์ใน Perps ได้<br>
+<b>Proxy นี้ถอนเงินไม่ได้</b> ตามเอกสาร Polymarket การถอนเงินต้องใช้กุญแจของกระเป๋าหลักคุณเท่านั้น (proxy โอนเงินระหว่างบัญชีได้เฉพาะบัญชีใน "account group" เดียวกัน ซึ่งต้องให้ Polymarket ตั้งให้ ปกติบัญชีทั่วไปไม่มี)<br>
+หมดอายุอัตโนมัติ: <b id="expTxt"></b>
+</div>
+<div class="box warn">
+⚠️ <b>ห้ามกรอกหรือส่ง seed phrase / private key ให้ใครเด็ดขาด</b> หน้านี้ไม่เคยขอ<br>
+หน้านี้ไม่ส่งข้อมูลไปที่ไหนเลย คุณต้องกดคัดลอกผลลัพธ์แล้วส่งให้ David เอง<br>
+📱 <b>บนมือถือ:</b> เปิดลิงก์นี้ใน <b>เบราว์เซอร์ในแอปกระเป๋า</b> (MetaMask / Rabby / OKX Wallet → แท็บ Browser) เพราะ Safari/Chrome ธรรมดาเชื่อมกระเป๋าไม่ได้<br>
+ต้องใช้ <b>กระเป๋าเดียวกับที่ใช้ล็อกอิน Polymarket</b> (ถ้าล็อกอิน Polymarket ด้วยอีเมล/Google จะเซ็นในหน้านี้ไม่ได้ ให้บอก David)
+</div>
+<div class="box">
+Proxy ของ David: <code id="proxyTxt"></code><br>
+กระเป๋าของคุณ: <code id="owner">ยังไม่เชื่อม</code>
+</div>
+<button id="bConnect">1) เชื่อมกระเป๋า</button>
+<button id="bSign" disabled>2) เซ็นอนุญาต (ไม่เสียเงิน)</button>
+<div id="err"></div>
+<div id="out" style="display:none" class="box ok">
+<b>3) คัดลอกข้อความนี้ แล้วส่งให้ David ในแชตส่วนตัว (ภายใน ~10 นาที)</b>
+<textarea id="blob" readonly></textarea>
+<button id="bCopy">📋 คัดลอก</button>
+<small>ข้อความนี้ไม่ใช่รหัสลับของกระเป๋า มันอนุญาตได้แค่ proxy ของ David ตัวนี้ตัวเดียว</small>
+</div>
+<script>
+const PROXY="0x531f5ddd63c5598a0364c83C692ecf95696bb48b";
+const EXPIRY=1794282501389;
+const $=id=>document.getElementById(id);
+$("proxyTxt").textContent=PROXY;
+$("expTxt").textContent=new Date(EXPIRY).toLocaleString("th-TH",{timeZone:"Asia/Bangkok"})+" (เวลาไทย)";
+let owner=null;
+function err(m){$("err").textContent=m||"";}
+$("bConnect").onclick=async()=>{err();
+ if(!window.ethereum){err("ไม่พบกระเป๋าในเบราว์เซอร์นี้ ถ้าใช้มือถือ ให้เปิดลิงก์นี้ในเบราว์เซอร์ของแอป MetaMask / Rabby / OKX Wallet");return;}
+ try{const a=await ethereum.request({method:"eth_requestAccounts"});owner=a[0];$("owner").textContent=owner;$("bSign").disabled=false;}
+ catch(e){err("เชื่อมไม่สำเร็จ: "+(e.message||e));}
+};
+async function ensurePolygon(){
+ const cid=await ethereum.request({method:"eth_chainId"});
+ if(parseInt(cid,16)===137)return;
+ try{await ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x89"}]});}
+ catch(e){ if(e.code===4902){await ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:"0x89",chainName:"Polygon",nativeCurrency:{name:"POL",symbol:"POL",decimals:18},rpcUrls:["https://polygon-rpc.com"],blockExplorerUrls:["https://polygonscan.com"]}]});} else throw e; }
+}
+$("bSign").onclick=async()=>{err();
+ try{
+  await ensurePolygon(); // ข้อความเซ็นใช้ chainId 137 (Polygon) — แค่สลับเครือข่าย ไม่มีธุรกรรม
+  const r=new Uint32Array(2);crypto.getRandomValues(r);
+  const salt=Number((BigInt(r[0]&0x1fffff)<<32n)|BigInt(r[1])); // < 2^53
+  const ts=Date.now();
+  const typed={types:{EIP712Domain:[{name:"name",type:"string"},{name:"version",type:"string"},{name:"chainId",type:"uint256"}],
+    CreateProxy:[{name:"addr",type:"address"},{name:"exp",type:"uint64"},{name:"salt",type:"uint64"},{name:"ts",type:"uint64"}]},
+    primaryType:"CreateProxy",domain:{name:"Polymarket",version:"1",chainId:137},
+    message:{addr:PROXY,exp:EXPIRY,salt:salt,ts:ts}};
+  const sig=await ethereum.request({method:"eth_signTypedData_v4",params:[owner,JSON.stringify(typed)]});
+  $("blob").value=JSON.stringify({owner,proxy:PROXY,expiry:EXPIRY,salt,ts,sig});
+  $("out").style.display="block";
+ }catch(e){err("เซ็นไม่สำเร็จ: "+(e.message||e));}
+};
+$("bCopy").onclick=async()=>{try{await navigator.clipboard.writeText($("blob").value);$("bCopy").textContent="✅ คัดลอกแล้ว";}catch(e){$("blob").select();document.execCommand("copy");$("bCopy").textContent="✅ คัดลอกแล้ว";}};
+</script></body></html>
