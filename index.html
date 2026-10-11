@@ -1,0 +1,43 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><title>Pixel Office</title>
+<style>body{margin:0;background:#2b2140;display:flex;flex-direction:column;align-items:center;font-family:monospace;color:#fff}
+canvas{image-rendering:pixelated;width:960px;height:600px;border:6px solid #1a1428;margin-top:16px}
+#bar{margin:8px;font-size:14px;opacity:.8}</style></head><body>
+<canvas id="c" width="320" height="200"></canvas><div id="bar">Pixel Office: David, Kim, Jane</div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+let status={David:"ดูภาพรวมทีม",Kim:"ไล่อ่านข่าวบน X",Jane:"นั่งดูกราฟ วิเคราะห์อัลฟ่า"};
+const sim={David:["ตรวจงาน Kim","ประชุมทีม","จิบกาแฟ ☕"],Kim:["ไล่อ่านข่าวบน X","คัดอัลฟ่า","เช็กอีเมล"],Jane:["นั่งดูกราฟ 📈","คำนวณผลตอบแทน","เขียนสรุป"]};
+async function load(){try{const r=await fetch('status.json?'+Date.now());const j=await r.json();Object.assign(status,j);document.getElementById('bar').textContent='สถานะจริง อัปเดต '+(j.updated||'')}catch(e){for(const k in sim)status[k]=sim[k][Math.floor(Date.now()/8000)%3];document.getElementById('bar').textContent='โหมดจำลอง'}}
+load();setInterval(load,8000);
+const chars=[
+ {n:"David",hair:"#5a3a1a",shirt:"#3b6fd1",desk:{x:150,y:60},x:150,y:110,tx:150,ty:110},
+ {n:"Kim",hair:"#111",shirt:"#2fa36b",desk:{x:50,y:120},x:60,y:150,tx:60,ty:150},
+ {n:"Jane",hair:"#c0603a",shirt:"#e05d9a",desk:{x:240,y:120},x:250,y:150,tx:250,ty:150,girl:1}];
+function room(){x.fillStyle='#e8d3a8';x.fillRect(0,0,320,50);
+ for(let i=0;i<320;i+=16)for(let j=50;j<200;j+=16){x.fillStyle=((i+j)/16)%2?'#9c6b3f':'#a8774a';x.fillRect(i,j,16,16)}
+ x.fillStyle='#6b4a2b';x.fillRect(0,46,320,4);
+ // window
+ x.fillStyle='#5a3a1a';x.fillRect(130,8,60,32);x.fillStyle='#8fd3ff';x.fillRect(133,11,54,26);x.fillStyle='#5a3a1a';x.fillRect(159,11,2,26);
+ // plant, shelf, clock
+ x.fillStyle='#6b4a2b';x.fillRect(20,14,50,6);x.fillStyle='#c33';x.fillRect(24,6,6,8);x.fillStyle='#36c';x.fillRect(32,8,5,6);x.fillStyle='#fc3';x.fillRect(40,7,6,7);
+ x.fillStyle='#fff';x.fillRect(260,12,14,14);x.fillStyle='#333';x.fillRect(266,14,2,6);x.fillRect(266,19,5,2);
+ x.fillStyle='#7a4a2a';x.fillRect(296,150,12,10);x.fillStyle='#3a9a3a';x.fillRect(292,134,20,18);
+ // desks
+ for(const ch of chars){const d=ch.desk;x.fillStyle='#7b5230';x.fillRect(d.x-20,d.y,40,14);x.fillStyle='#5a3a1a';x.fillRect(d.x-18,d.y+14,4,8);x.fillRect(d.x+14,d.y+14,4,8);
+  x.fillStyle='#222';x.fillRect(d.x-8,d.y-12,16,12);x.fillStyle=ch.n=="Jane"?'#0a3':'#3af';x.fillRect(d.x-7,d.y-11,14,10);
+  if(ch.n=="Jane"){x.fillStyle='#fff';for(let k=0;k<5;k++)x.fillRect(d.x-6+k*3,d.y-3-((k*7)%6),2,2)}}}
+function person(ch,t){const bob=Math.abs(Math.sin(t/150))*(ch.moving?2:0);const px=Math.round(ch.x),py=Math.round(ch.y-bob);
+ x.fillStyle='rgba(0,0,0,.25)';x.fillRect(px-5,ch.y+10,10,2);
+ x.fillStyle='#333';x.fillRect(px-4,py+4,3,6);x.fillRect(px+1,py+4,3,6);
+ x.fillStyle=ch.shirt;x.fillRect(px-5,py-4,10,9);
+ x.fillStyle='#f2c79a';x.fillRect(px-4,py-12,8,8);
+ x.fillStyle=ch.hair;x.fillRect(px-4,py-13,8,3);if(ch.girl){x.fillRect(px-5,py-12,2,8);x.fillRect(px+3,py-12,2,8)}
+ x.fillStyle='#000';x.fillRect(px-2,py-9,1,1);x.fillRect(px+1,py-9,1,1);
+ x.font='5px monospace';x.fillStyle='#fff';x.textAlign='center';x.fillText(ch.n,px,py+18);
+ const s=status[ch.n]||'';x.font='6px sans-serif';const w=x.measureText(s).width+6;
+ x.fillStyle='#fff';x.fillRect(px-w/2,py-26,w,10);x.fillRect(px-1,py-16,2,2);x.fillStyle='#222';x.fillText(s,px,py-19)}
+function step(){for(const ch of chars){if(Math.random()<.004){if(Math.random()<.5){ch.tx=ch.desk.x+5;ch.ty=ch.desk.y+28}else{ch.tx=30+Math.random()*260;ch.ty=90+Math.random()*90}}
+ const dx=ch.tx-ch.x,dy=ch.ty-ch.y,d=Math.hypot(dx,dy);ch.moving=d>1;if(ch.moving){ch.x+=dx/d*.5;ch.y+=dy/d*.5}}}
+function loop(t){step();room();[...chars].sort((a,b)=>a.y-b.y).forEach(ch=>person(ch,t));requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+</script></body></html>
