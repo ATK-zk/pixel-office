@@ -44,3 +44,7 @@
 2026-10-11 20:59:30 STOP
 2026-10-11 20:59:32 START strategy engine (LIVE) {"limits": {"base": 429.85, "max_risk_pct": 0.02, "lev_trade": 10.0, "lev_total": 15.0, "max_open": 4, "max_open_risk_pct": 0.06, "daily_loss_pct": 0.08, "weekly_loss_pct": 0.2, "max_dd_pct": 0.3, "review_r": -8.0, "review_after_n": 30, "loss_streak": 4, "streak_pause_h": 2, "max_trades_day": 20, "cooldown_min": 30, "corr_risk_pct": 0.03, "min_stop_fee_x": 3.0, "taker_fee": 0.0004, "maker_fee": 0.000125, "loop_s": 10, "status_every_s": 60, "event_pad_min": 30, "funding_block": 5e-05}}
 2026-10-11 20:59:32 PLAYBOOK {"entries": ["SOL-USD:breakout bias=short risk=1.50%", "ETH-USD:breakout bias=short risk=0.75%"]}
+2026-10-11 21:00:42 push failed (retry next minute)
+2026-10-11 21:00:44 STOP
+2026-10-11 21:00:46 START strategy engine (LIVE) {"limits": {"base": 429.85, "max_risk_pct": 0.02, "lev_trade": 10.0, "lev_total": 15.0, "max_open": 4, "max_open_risk_pct": 0.06, "daily_loss_pct": 0.08, "weekly_loss_pct": 0.2, "max_dd_pct": 0.3, "review_r": -8.0, "review_after_n": 30, "loss_streak": 4, "streak_pause_h": 2, "max_trades_day": 20, "cooldown_min": 30, "corr_risk_pct": 0.03, "min_stop_fee_x": 3.0, "taker_fee": 0.0004, "maker_fee": 0.000125, "loop_s": 10, "status_every_s": 180, "event_pad_min": 30, "funding_block": 5e-05}}
+2026-10-11 21:00:46 PLAYBOOK {"entries": ["SOL-USD:breakout bias=short risk=1.50%", "ETH-USD:breakout bias=short risk=0.75%"]}
