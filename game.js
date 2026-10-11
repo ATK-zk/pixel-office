@@ -155,7 +155,7 @@ function emote(bt,k){bt.emote={k,t:0}}
 function update(dt){for(const bt of bots){bt.ft+=dt;bt.bt-=dt;if(bt.bt<0){bt.blink=bt.blink?0:1;bt.bt=bt.blink?.12:2+Math.random()*4}
   if(bt.emote){bt.emote.t+=dt;if(bt.emote.t>3)bt.emote=null}
   if(bt.state=='walk'){bt.pose='walk';const p=bt.path[0];
-    if(!p&&bt.goal&&bt.goal.wc&&bt.wcIn!=1&&bt.wcIn!=3){if(!bt.wcIn){if(bots.some(o=>o!==bt&&(o.hidden||o.wcIn==1))){bt.wcIn=3;}else{bt.wcIn=1;bt.path=[{x:133,y:522},{x:163,y:522}];continue}}else if(bt.wcIn==2){bt.wcIn=0;goHome(bt);continue}}
+    if(!p&&bt.goal&&bt.goal.wc&&bt.wcIn!=1&&bt.wcIn!=3){if(!bt.wcIn){if(bots.some(o=>o!==bt&&(o.hidden||o.wcIn==1))){bt.wcIn=3;}else{bt.wcIn=1;bt.path=[{x:133,y:500},{x:160,y:518}];continue}}else if(bt.wcIn==2){bt.wcIn=0;goHome(bt);continue}}
     if(!p&&bt.wcIn==1){bt.hidden=true;bt.state='idle';bt.t=6+Math.random()*5;continue}
     if(!p&&bt.wcIn==3)bt.wcIn=0;
     if(!p){if(bt.goal){bt.state='idle';bt.t=5+Math.random()*5;bt.dir=bt.goal.dir;bt.pose=bt.goal.pose;if(bt.goal.visit){emote(bt.goal.visit,'♪');emote(bt,'💬')}if(bt.goal.steam)puff(bt.x+6,bt.y-30)}
@@ -165,7 +165,7 @@ function update(dt){for(const bt of bots){bt.ft+=dt;bt.bt-=dt;if(bt.bt<0){bt.bli
   else{bt.t-=dt;const sp=bt.pose=='sit'||bt.pose=='play'?.16:bt.pose=='wave'?.3:.7;if(bt.ft>sp){bt.ft=0;bt.f=(bt.f+1)%4}
     if(bt.state=='work'&&bt.n=='Jane'){const ph=(time/7)%4|0;bt.pose=ph==3?'sip':'sit'}
     if(bt.state=='work'&&bt.n=='David'&&((time/9)%5|0)==4)bt.pose='stand';else if(bt.state=='work'&&bt.n=='David')bt.pose='sit';
-    if(bt.t<=0){if(bt.hidden){bt.hidden=false;bt.wcIn=2;bt.state='walk';bt.say='✨ กลับจากห้องน้ำ';bt.path=[{x:133,y:522},{x:133,y:466}];continue}bt.state=='work'?plan(bt):goHome(bt)}}}
+    if(bt.t<=0){if(bt.hidden){bt.hidden=false;bt.wcIn=2;bt.state='walk';bt.say='✨ กลับจากห้องน้ำ';bt.path=[{x:133,y:500},{x:133,y:466}];continue}bt.state=='work'?plan(bt):goHome(bt)}}}
   for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.t+=dt}for(let i=parts.length-1;i>=0;i--)if(parts[i].t>parts[i].life)parts.splice(i,1);
   steamT+=dt;if(steamT>.35){steamT=0;puff(43,64);if(Math.random()<.5)for(const bt of bots)if(bt.pose=='sip')puff(bt.x+(bt.dir==2?-6:7),bt.y-40)}}
 // ================= PARTICLES =================
@@ -324,7 +324,7 @@ var frame=function(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;
   if(ease){for(const k of['x','y','z'])cam[k]+=(tcam[k]-cam[k])*Math.min(1,dt*8);clampC(cam);if(Math.abs(tcam.z-cam.z)<.002&&Math.hypot(tcam.x-cam.x,tcam.y-cam.y)<.2)ease=false}
   else if(!ptrs.size&&(Math.abs(vel.x)+Math.abs(vel.y))>.05){cam.x-=vel.x;cam.y-=vel.y;vel.x*=.9;vel.y*=.9;clampC(cam)}
   drawWorld();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#120c08';ctx.fillRect(0,0,cv.width,cv.height);ctx.imageSmoothingEnabled=false;
-  const s=cam.z*dpr;ctx.setTransform(s,0,0,s,Math.round((vw/2-cam.x*cam.z)*dpr),Math.round((vh/2-cam.y*cam.z)*dpr));ctx.drawImage(window.ISOC||world,0,0);
+  const s=cam.z*dpr;ctx.setTransform(s,0,0,s,Math.round((vw/2-cam.x*cam.z)*dpr),Math.round((vh/2-cam.y*cam.z)*dpr));ctx.drawImage(world,0,0);
   placeDom();if((mt+=dt)>.2){mt=0;drawMini()}requestAnimationFrame(frame)}
 // ================= INIT =================
 safe(tickClock,'clock');safe(()=>{renderTasks([]);poll();setInterval(poll,8000)},'status');setInterval(()=>safe(tickClock,'clock'),1000);

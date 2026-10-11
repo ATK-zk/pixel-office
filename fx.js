@@ -37,3 +37,15 @@ const _ds=drawScreens;drawScreens=function(g){_ds(g);cT+=1/60;if(cT>1.6){cT=0;pu
   const ly=sy(live.c);for(let x=X;x<X+Wd;x+=3)P(g,x,ly,'#ffcf4a');R(g,X+Wd-8,ly-1,8,3,'#ffcf4a');
   // screen sheen
   g.fillStyle='rgba(120,180,255,.06)';g.fillRect(X,Y,Wd,8)};
+// ===== dust kicks, screen-glow, vignette =====
+const dust=[];const [vig,vg2]=mk(W,H);{const gr=vg2.createRadialGradient(W/2,H/2,H*.35,W/2,H/2,W*.7);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(10,4,20,.45)');vg2.fillStyle=gr;vg2.fillRect(0,0,W,H)}
+const GLOWCOL={David:'140,200,255',Kim:'120,230,255',Jane:'140,255,180',Alex:'255,200,130',Jhon:'255,150,150',Su:'200,170,255'};
+const _dw=drawWorld;drawWorld=function(){const dt=1/60;
+  for(const bt of bots)if(bt.state=='walk'&&!bt.hidden&&Math.random()<.18)dust.push({x:bt.x+(Math.random()-.5)*6,y:bt.y,t:0});
+  _dw();const g=wx;
+  for(let i=dust.length-1;i>=0;i--){const d=dust[i];d.t+=dt;d.y-=dt*4;if(d.t>.6){dust.splice(i,1);continue}g.globalAlpha=(1-d.t/.6)*.5;R(g,d.x,d.y,1+(d.t>.3),1,'#e8d8b8')}g.globalAlpha=1;
+  g.globalCompositeOperation='lighter';
+  for(const bt of bots){if(bt.hidden||bt.state!='work')continue;const fl=.18+.07*Math.sin(time*7+bt.x)+(Math.random()<.03?.1:0);const gr=g.createRadialGradient(bt.x,bt.y-26,0,bt.x,bt.y-26,22);gr.addColorStop(0,`rgba(${GLOWCOL[bt.n]},${fl*(.6+nightK)})`);gr.addColorStop(1,`rgba(${GLOWCOL[bt.n]},0)`);g.fillStyle=gr;g.fillRect(bt.x-22,bt.y-48,44,44)}
+  // pulsing TV glow onto wall
+  const tg=g.createRadialGradient(518,40,0,518,40,70);tg.addColorStop(0,`rgba(90,170,255,${.08+.04*Math.sin(time*2)+nightK*.12})`);tg.addColorStop(1,'rgba(90,170,255,0)');g.fillStyle=tg;g.fillRect(448,0,140,110);
+  g.globalCompositeOperation='source-over';g.drawImage(vig,0,0)};
