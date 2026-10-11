@@ -95,28 +95,59 @@ limits=function(){return{min:Math.min(vw/W,vh/H)*.7,max:7}};
 const _cc19=clampC;clampC=function(c){_cc19(c);const hh=vh/2/c.z;if(hh*2>=H)c.y=H/2+Math.min(150/c.z,hh*2-H)/2;return c};
 resize.done=0;resize();Object.assign(tcam,cam);
 
-// ---- v32: no info cards; bubbles = what each agent is doing NOW (schedule + live data) ----
-showCard=function(){};hideCard=function(){};info=function(){};
-try{$('card').style.display='none';$('info').classList.add('hidden')}catch(e){}
+// ---- v34: bubbles alternate activity / thought; tap = current-work card ----
+info=function(){};try{$('card').style.display='none';$('info').classList.add('hidden')}catch(e){}
 var SCHED={Kim:[['08:10','📰 สรุปข่าวรอบเช้า'],['20:10','📰 สรุปข่าวรอบค่ำ']],Jane:[['08:20','🎯 คัดสินทรัพย์รอบเช้า'],['20:20','🎯 คัดสินทรัพย์รอบค่ำ']],
  Alex:[['08:27','🧪 วางกลยุทธ์ + backtest'],['20:27','🧪 วางกลยุทธ์ + backtest']],Jhon:[['08:41','🛡️ ตรวจความเสี่ยงแผน'],['20:41','🛡️ ตรวจความเสี่ยงแผน']],
  David:[['08:43','📋 ปิดประชุม ส่งแผนให้บอท'],['20:43','📋 ปิดประชุม ส่งแผนให้บอท']],Su:[['23:00','📒 ทำรายงาน PnL']]};
-function bkk(){const d=new Date(Date.now()+7*3600e3);return{m:d.getUTCHours()*60+d.getUTCMinutes(),day:d.toISOString().slice(0,10)}}
+var ROLE={David:'หัวหน้าทีม · ส่งแผนให้บอท',Kim:'นักข่าว · ปฏิทินข่าว',Jane:'คัดสินทรัพย์',Alex:'กลยุทธ์ + backtest',Jhon:'คุมความเสี่ยง',Su:'บันทึกผล / รายงาน'};
+var ACT={David:['☕ ชงกาแฟ','📊 ดูกราฟ SOL','📞 คุยกับ Jhon','📝 ทวนแผนบอท','🖥️ เช็กบอท'],Kim:['📰 อ่านข่าว','📱 ไถ X หาข่าว','📞 คุยกับ Jane','🗓️ อัปเดตปฏิทิน','☕ จิบชา'],
+ Jane:['🔍 สแกนตลาด','📈 เทียบ volume','💬 คุยกับ Alex','☕ ชงกาแฟ','📋 จดรายชื่อเหรียญ'],Alex:['⌨️ เขียนโค้ด','🧪 รัน backtest','📐 ปรับพารามิเตอร์','💬 คุยกับ Jane','🍪 กินขนม'],
+ Jhon:['🧮 คำนวณลิมิต','👀 เฝ้าจอ','📞 คุยกับ David','📏 เช็กขนาดไม้','☕ กาแฟดำ'],Su:['⌨️ พิมพ์รายงาน','📒 จดบันทึกไม้','📊 ทำตาราง PnL','💬 คุยกับ Jhon','🍵 จิบชา']};
+function bkk(){const d=new Date(Date.now()+7*3600e3);return{m:d.getUTCHours()*60+d.getUTCMinutes(),h:d.getUTCHours(),dow:d.getUTCDay()}}
 const hm=t=>{const[a,b]=t.split(':');return +a*60+ +b};
 function nextOf(n,m){const l=SCHED[n].map(x=>x[0]);return l.find(t=>hm(t)>m)||l[0]}
-function nowStatus(n){const s=ST||{},L=s.live||{},{m}=bkk();
- // explicit fresh status (<30 min) wins
- const ts=(s.status_times||{})[n]||s.updated;if(s[n]&&ts){const t=Date.parse(String(ts).includes('T')?ts:String(ts).replace(' ','T')+'+07:00');if(isFinite(t)&&Date.now()-t<30*60e3)return s[n]}
- for(const[t,txt]of SCHED[n]){const d=m-hm(t);if(d>=0&&d<15)return txt}
- const nx=nextOf(n,m);
- if(n=='David'){const pb=(L.playbook_active||[]).map(x=>String(x).replace('-USD','')),op=Object.keys(L.open||{}).map(x=>x.replace('-USD',''));
-  if(L.halted||L.stopped)return '⛔ บอทหยุด: '+(L.halted||L.stopped);
-  if(op.length)return '💹 บอทถือ '+op.join(', ')+' · PnL วันนี้ $'+(+L.day_pnl_usd||0).toFixed(2);
-  if(pb.length){const g={};pb.forEach(x=>{const[a,b]=x.split(':');(g[b||'?']=g[b||'?']||[]).push(a)});return '🤖 บอทเทรดจริง: '+Object.entries(g).map(([k,v])=>k+' '+v.join('/')).join(' · ')}
-  return '🤖 บอทรอแผนรอบ '+nx}
- if(n=='Jhon'){const dl=Math.max(0,-(+L.day_pnl_usd||0));return '🛡️ เฝ้าลิมิต ขาดทุนวันนี้ $'+dl.toFixed(2)}
- if(n=='Su')return '📒 รอรายงาน 23:00';
- if(n=='Kim')return '📰 ข่าวถัดไป '+nx;
- if(n=='Jane')return '🎯 คัดสินทรัพย์รอบ '+nx;
- if(n=='Alex')return '🧪 วางกลยุทธ์รอบ '+nx;
- return s[n]||'…'}
+function LV(){return (ST&&ST.live)||{}}
+const sym=x=>String(x||'').replace('-USD','');
+function nextEv(){const now=Date.now();return (Array.isArray(ST.next_event)?ST.next_event:[]).filter(e=>e&&Date.parse(e.time)>now).sort((a,b)=>Date.parse(a.time)-Date.parse(b.time))}
+const thTime=t=>{try{const d=new Date(Date.parse(t)+7*3600e3);return ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'][d.getUTCDay()]+' '+d.toISOString().slice(11,16)}catch(e){return ''}};
+function explicit(n){const s=ST||{};const ts=(s.status_times||{})[n]||s.updated;if(s[n]&&ts){const t=Date.parse(String(ts).includes('T')?ts:String(ts).replace(' ','T')+'+07:00');if(isFinite(t)&&Date.now()-t<30*60e3)return s[n]}return null}
+function slotTask(n){const{m}=bkk();for(const[t,txt]of SCHED[n]){const d=m-hm(t);if(d>=0&&d<15)return txt}return null}
+function thought(n){const L=LV(),dp=+L.day_pnl_usd||0,op=Object.keys(L.open||{}).map(sym),pb=(L.playbook_active||[]).map(x=>sym(String(x).split(':')[0])),ev=nextEv()[0];
+ const o={David:op.length?`ถือ ${op.join(', ')} อยู่ ลุ้นถึงเป้า...`:pb.length?`${pb[0]} ใกล้ทะลุกรอบแล้วนะ...`:'รอแผนรอบหน้า...',
+  Jhon:dp<0?`ขาดทุนวันนี้ $${(-dp).toFixed(2)} ยังในลิมิต`:`ขาดทุนวันนี้ยัง $0 ดี`,
+  Kim:ev?`${ev.name} ${thTime(ev.time)} ต้องระวัง...`:'ข่าวเงียบ ๆ ดีจัง...',
+  Jane:pb.length?`${pb.join('/')} ยังน่าเล่นอยู่ไหมนะ...`:'ตัวไหนดีรอบหน้า...',
+  Alex:pb.length?'breakout ต้องรอแท่ง 1h ปิด...':'ลองพารามิเตอร์ใหม่ดีไหม...',
+  Su:(+L.closed_trades||0)>0?`ไม้จริง ${L.closed_trades} ไม้ PnL $${dp.toFixed(2)}`:'วันนี้ยังไม่มีไม้จริง...'};return o[n]||'...'}
+function activity(n){const{h}=bkk(),a=ACT[n]||['💼 ทำงาน'];if(h<7||h>=23)return '🌙 พักผ่อน';if(h==12)return '🍜 พักกินข้าว';return a[(Math.floor(Date.now()/60e3/3)+n.length)%a.length]}
+var _think={};
+function nowStatus(n){_think[n]=false;const e=explicit(n);if(e)return e;const sl=slotTask(n);if(sl)return sl;
+ const ph=Math.floor((Date.now()+n.charCodeAt(0)*977)/7000)%2;if(ph){_think[n]=true;return '💭 '+thought(n)}return activity(n)}
+const _pd34=placeDom;placeDom=function(){_pd34();for(const n in bubs)bubs[n].classList.toggle('think',!!_think[n])};
+(function(){const st=document.createElement('style');st.textContent=`.bub.think{background:#f2f4fb;color:#4a4f66;font-style:italic;font-weight:400;border-style:dashed;border-radius:14px}
+.bub.think:after{border:none;width:6px;height:6px;border-radius:50%;background:#f2f4fb;border:1.5px solid #4a4f66;bottom:-10px;margin-left:-3px}
+#pcard{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);width:min(92vw,340px);background:#1d1a26;color:#f3eee6;border:2px solid #e8c25a;border-radius:12px;padding:12px 14px;z-index:100000;font-size:13.5px;line-height:1.45;box-shadow:0 8px 30px #000a}
+#pcard.hidden{display:none}#pcard h3{margin:0 0 2px;font-size:16px}#pcard .rl{color:#b9b0c4;font-size:12px;margin-bottom:8px}#pcard .k{color:#e8c25a;font-weight:600}
+#pcard .f{margin:3px 0;padding-left:10px;border-left:2px solid #4a4560}#pcard .x{position:absolute;right:8px;top:6px;background:none;border:0;color:#fff;font-size:20px;padding:4px 8px;cursor:pointer}`;document.head.appendChild(st);
+ const c=document.createElement('div');c.id='pcard';c.className='hidden';c.innerHTML='<button class="x" aria-label="ปิด">✕</button><div id="pcb"></div>';document.body.appendChild(c);
+ c.addEventListener('pointerdown',e=>e.stopPropagation());c.addEventListener('click',e=>e.stopPropagation());c.querySelector('.x').onclick=e=>{e.stopPropagation();hideCard()};
+ document.addEventListener('pointerdown',e=>{if(!c.classList.contains('hidden')&&!c.contains(e.target))setTimeout(()=>{if(Date.now()-(c._t||0)>250)hideCard()},0)},true)})();
+function facts(n){const L=LV(),f=[],lim=L.limits||{},base=+L.base||+L.account_value||0,dp=+L.day_pnl_usd||0,op=L.open||{};
+ try{if(n=='David'){const pb=L.playbook_active||[];f.push('แผนบอท: '+(pb.length?pb.map(x=>{const[a,b]=String(x).split(':');return sym(a)+' '+(b||'')}).join(', '):'–'));
+   const ks=Object.keys(op);f.push('ไม้เปิด: '+(ks.length?ks.map(k=>{const p=op[k]||{};return `${sym(k.split(':')[0])} ${p.side||''} @${p.entry??'–'}`}).join(', '):'ไม่มี'));
+   f.push('บอท: '+(L.halted||L.stopped?'⛔ '+(L.halted||L.stopped):L.heartbeat?'✅ ทำงาน (ล่าสุด '+String(L.heartbeat).slice(11,16)+')':'–'))}
+  if(n=='Jhon'){const lp=+lim.daily_loss_pct||0.06;f.push(`ขาดทุนวันนี้: $${Math.max(0,-dp).toFixed(2)} / $${(lp*base).toFixed(2)} (${(lp*100).toFixed(0)}%)`);
+   let risk=0;for(const k in op){const p=op[k]||{};if(p.entry!=null&&p.stop!=null&&p.qty!=null)risk+=Math.abs(p.entry-p.stop)*Math.abs(p.qty)}f.push(`ความเสี่ยงไม้เปิด: $${risk.toFixed(2)} (${Object.keys(op).length}/${lim.max_open??3} ไม้)`);
+   f.push('สถานะ: '+(L.halted?'⛔ halt: '+L.halted:L.stopped?'⏸ หยุดวันนี้: '+L.stopped:L.paused_until?'⏸ พักถึง '+String(L.paused_until).slice(11,16):'✅ เทรดได้'))}
+  if(n=='Kim'){const ev=nextEv().slice(0,3);f.push(...(ev.length?ev.map(e=>`${e.name} · ${thTime(e.time)}${e.pause_start?' (หยุดบอท '+String(e.pause_start).slice(11,16)+'–'+String(e.pause_end||'').slice(11,16)+')':''}`):['ไม่มีข่าวใหญ่ในปฏิทิน']));if(L.news_block)f.push('ตอนนี้: '+L.news_block)}
+  if(n=='Jane'){const pk=(Array.isArray(ST.picks)?ST.picks:[]).filter(p=>p&&!/^(mm|market making)$/i.test(String(p.bias||'')));f.push(...(pk.length?pk.slice(0,3).map(p=>`${p.asset} · ${p.bias||''}${p.updated?' ('+String(p.updated).slice(5,16).replace('T',' ')+')':''}`):['ยังไม่มีรายการคัด']))}
+  if(n=='Alex'){const pb=ST.playbook&&Array.isArray(ST.playbook.entries)?ST.playbook.entries.filter(e=>e&&e.enabled!==false):[];f.push(...(pb.length?pb.slice(0,3).map(e=>`${sym(e.symbol)} ${e.strategy||''} ${e.params&&e.params.interval||''} · เสี่ยง ${e.risk_pct??'–'}%`):['ยังไม่มีกลยุทธ์ที่ใช้งาน']))}
+  if(n=='Su'){const st=ST.stats||{};f.push(`PnL วันนี้: $${dp.toFixed(2)}`,`Volume วันนี้: $${(+st.volume||0).toFixed(2)}`,`ไม้ปิดแล้ว: ${L.closed_trades??0} · แพ้ติด ${L.loss_streak??0}`)}
+ }catch(e){f.push('ข้อมูลไม่ครบ')}return f}
+showCard=function(n){if(!SCHED[n])return;const c=$('pcard');const{m}=bkk();const ex=explicit(n),sl=slotTask(n);
+ const cur=ex||sl||activity(n);
+ $('pcb').innerHTML=`<h3 style="color:${(CH[n]&&CH[n].col)||'#fff'}">${esc2(n)}</h3><div class="rl">${esc2(ROLE[n]||'')}</div><div><span class="k">ตอนนี้:</span> ${esc2(cur)}</div><div><span class="k">รอบถัดไป:</span> ${esc2(nextOf(n,m))} น.</div><div style="margin-top:6px">`+facts(n).map(x=>`<div class="f">${esc2(x)}</div>`).join('')+'</div>';
+ c.classList.remove('hidden');c._t=Date.now();cardFor=n};
+hideCard=function(){const c=$('pcard');if(c)c.classList.add('hidden');cardFor=null};
+planCard=()=>showCard('Alex');statsCard=()=>showCard('Su');riskCard=()=>showCard('Jhon');picksCard=()=>showCard('Jane');
