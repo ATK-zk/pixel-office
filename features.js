@@ -54,7 +54,7 @@ let K=[],kErr=0;async function loadK(){for(const u of['https://api.binance.com/a
 loadK();setInterval(loadK,60000);
 const _ds19=drawScreens;drawScreens=function(g){_ds19(g);const[X,Y,Wd,Hd]=TVR,x0=X+3,y0=Y+3,w=Wd-6,h=Hd-6;R(g,x0,y0,w,h,'#07101e');
   if(!K.length){g.fillStyle='#8aa4c4';g.font='bold 8px monospace';g.fillText('BTC loading…',x0+30,y0+22);return}
-  const pl=(Array.isArray(ST.plan)?ST.plan:[]).find(p=>/BTC/i.test(p.asset||p.symbol||''))||{};const off=num(pl.ref_offset)||0;const lv=[['E',pl.entry,'#ffd04a'],['SL',pl.stop??pl.stop_loss,'#ff4a4a'],['TP',pl.target??pl.take_profit,'#5dff9a']].filter(a=>num(a[1])!=null).map(a=>[a[0],+a[1]+off,a[2]]);
+  const pl=(Array.isArray(ST.plan)?ST.plan:[]).find(p=>/BTC/i.test(p.asset||p.symbol||''))||{};const off=num(pl.ref_offset)||0;const lv=[['E',pl.entry,'#ffd04a'],['SL',pl.stop??pl.stop_loss,'#ff4a4a'],['TP',pl.target??pl.take_profit,'#5dff9a']].filter(a=>num(a[1])!=null).map(a=>[a[0],+a[1]-off,a[2]]);
   const KK=K.slice(-28);let mn=1e12,mx=0;for(const k of KK){mn=Math.min(mn,k.l);mx=Math.max(mx,k.h)}for(const a of lv){mn=Math.min(mn,+a[1]);mx=Math.max(mx,+a[1])}const top=y0+11,ch=h-12,sy=v=>top+(1-(v-mn)/(mx-mn||1))*(ch-1);const cx0=x0+16,cw=(w-18)/KK.length;
   KK.forEach((k,i)=>{const cx=cx0+i*cw,up=k.c>=k.o,col=up?'#3fe07a':'#ff5a6a';R(g,cx+cw/2,sy(k.h),1,sy(k.l)-sy(k.h)+1,col);const a=sy(Math.max(k.o,k.c));R(g,cx,a,Math.max(1,cw-1),Math.max(1,sy(Math.min(k.o,k.c))-a),col)});
   g.font='bold 8px monospace';for(const[n,v,c]of lv){const y=Math.round(sy(+v));for(let x=cx0;x<x0+w;x+=4)R(g,x,y,3,2,c);R(g,x0-2,y-4,16,9,c);g.fillStyle='#000';g.fillText(n,x0-1,y+3)}
