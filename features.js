@@ -40,9 +40,11 @@ function liveNorm(s){try{const L=s.live||{},lim=L.limits||{};
  const b0=pick2(L.base);if(b0!=null)s.portfolio_start=b0;
  const dp=pick2(L.day_pnl_usd)??0,lim$=(pick2(lim.daily_loss_pct)??0.06)*(b0||av||0);
  s.risk={daily_loss_usd:Math.max(0,-dp),mm_effective_limits:{comb_daily:lim$},trading_halted:!!(L.halted||L.stopped)};
- s.stats={volume:pick2(L.volume_today_usd,L.day_volume_usd)??0,pnl:dp,daily_loss_limit:lim$,updated:L.heartbeat};
+ s.stats={volume:pick2(L.volume_today_usd,L.day_volume_usd)??(window._logVol||0),pnl:dp,daily_loss_limit:lim$,updated:L.heartbeat};
  }catch(e){}return s}
-async function poll2(){try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=liveNorm(await r.json());render();tick()}catch(e){}}
+var _logVolT=0;async function logVol(){if(Date.now()-_logVolT<60e3)return;_logVolT=Date.now();try{const r=await fetch('logs/live_trades.jsonl?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;const d0=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let v=0;
+ for(const ln of (await r.text()).split('\n')){if(!ln.trim())continue;try{const x=JSON.parse(ln);if(x.tag=='test'||String(x.t||'').slice(0,10)!=d0)continue;v+=x.notional!=null?Math.abs(+x.notional):Math.abs(+x.qty||0)*(Math.abs(+x.entry||0)+Math.abs(+x.exit||0))}catch(e){}}window._logVol=v}catch(e){}}
+async function poll2(){logVol();try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=liveNorm(await r.json());render();tick()}catch(e){}}
 poll2();setInterval(poll2,8000);
 // ---- ticker ----
 function evTime(e){if(!e)return null;const t=e.time||e.at||e.when||e.datetime||(typeof e=='string'?(e.match(/\d{4}-\d\d-\d\d[T ]\d\d:\d\d(:\d\d)?([+-]\d\d:?\d\d|Z)?/)||[])[0]:null);if(!t)return null;const u=String(t).trim().replace(' ','T');let d=new Date(/(Z|[+-]\d\d:?\d\d)$/.test(u)?u:u+'+07:00');return isNaN(d)?null:d}
@@ -79,6 +81,7 @@ const DESK={Jane:[512,216,582,264],Alex:[222,366,292,414],Su:[502,366,572,414],J
 function info(html){hideCard();$('infob').innerHTML=html;$('info').classList.remove('hidden');blip(760)}
 const esc2=s=>esc(s==null?'—':s);
 const TH={pending:'รอจับคู่',open:'ถือไม้อยู่',wait_market_open:'รอตลาดเปิด',idea:'ไอเดีย',closed:'ปิดแล้ว',approved_wait_start:'อนุมัติแล้ว รอเปิดบอท',running:'บอทกำลังรัน',paused:'บอทหยุดชั่วคราว'};
+function planCard(){}function statsCard(){}function riskCard(){}function picksCard(){}
 const _showCard=showCard;showCard=function(n){$('card').removeAttribute('aria-hidden');$('card').style.display='';_showCard(n)};
 hideCard=function(){cardFor=null;const c=$('card');c.classList.add('hidden');c.setAttribute('aria-hidden','true');c.style.display='none';for(const id of['cname','crole','cstat','cact','ctime'])$(id).textContent=''};$('cardx').onclick=e=>{e.stopPropagation();hideCard()};
 DESK.David=[340,140,432,194];DESK.Kim=[218,206,296,266];for(const n of['Jane','Alex','Su','Jhon'])DESK[n][1]-=12;
@@ -93,9 +96,9 @@ const _cc19=clampC;clampC=function(c){_cc19(c);const hh=vh/2/c.z;if(hh*2>=H)c.y=
 resize.done=0;resize();Object.assign(tcam,cam);
 
 // ---- v32: no info cards; bubbles = what each agent is doing NOW (schedule + live data) ----
-showCard=function(){};hideCard=function(){};planCard=statsCard=riskCard=picksCard=function(){};info=function(){};
+showCard=function(){};hideCard=function(){};info=function(){};
 try{$('card').style.display='none';$('info').classList.add('hidden')}catch(e){}
-const SCHED={Kim:[['08:10','📰 สรุปข่าวรอบเช้า'],['20:10','📰 สรุปข่าวรอบค่ำ']],Jane:[['08:20','🎯 คัดสินทรัพย์รอบเช้า'],['20:20','🎯 คัดสินทรัพย์รอบค่ำ']],
+var SCHED={Kim:[['08:10','📰 สรุปข่าวรอบเช้า'],['20:10','📰 สรุปข่าวรอบค่ำ']],Jane:[['08:20','🎯 คัดสินทรัพย์รอบเช้า'],['20:20','🎯 คัดสินทรัพย์รอบค่ำ']],
  Alex:[['08:27','🧪 วางกลยุทธ์ + backtest'],['20:27','🧪 วางกลยุทธ์ + backtest']],Jhon:[['08:41','🛡️ ตรวจความเสี่ยงแผน'],['20:41','🛡️ ตรวจความเสี่ยงแผน']],
  David:[['08:43','📋 ปิดประชุม ส่งแผนให้บอท'],['20:43','📋 ปิดประชุม ส่งแผนให้บอท']],Su:[['23:00','📒 ทำรายงาน PnL']]};
 function bkk(){const d=new Date(Date.now()+7*3600e3);return{m:d.getUTCHours()*60+d.getUTCMinutes(),day:d.toISOString().slice(0,10)}}
