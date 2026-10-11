@@ -104,7 +104,8 @@ var ROLE={David:'หัวหน้าทีม · ส่งแผนให้�
 var ACT={David:['☕ ชงกาแฟ','📊 ดูกราฟ SOL','📞 คุยกับ Jhon','📝 ทวนแผนบอท','🖥️ เช็กบอท'],Kim:['📰 อ่านข่าว','📱 ไถ X หาข่าว','📞 คุยกับ Jane','🗓️ อัปเดตปฏิทิน','☕ จิบชา'],
  Jane:['🔍 สแกนตลาด','📈 เทียบ volume','💬 คุยกับ Alex','☕ ชงกาแฟ','📋 จดรายชื่อเหรียญ'],Alex:['⌨️ เขียนโค้ด','🧪 รัน backtest','📐 ปรับพารามิเตอร์','💬 คุยกับ Jane','🍪 กินขนม'],
  Jhon:['🧮 คำนวณลิมิต','👀 เฝ้าจอ','📞 คุยกับ David','📏 เช็กขนาดไม้','☕ กาแฟดำ'],Su:['⌨️ พิมพ์รายงาน','📒 จดบันทึกไม้','📊 ทำตาราง PnL','💬 คุยกับ Jhon','🍵 จิบชา']};
-function bkk(){const d=new Date(Date.now()+7*3600e3);return{m:d.getUTCHours()*60+d.getUTCMinutes(),h:d.getUTCHours(),dow:d.getUTCDay()}}
+var DBG_T=(()=>{const m=/[?&]t=(\d{1,2}):(\d{2})/.exec(location.search);return m?{m:+m[1]*60+ +m[2],t0:Date.now()}:null})();
+function bkk(){if(DBG_T){const mm=DBG_T.m+(Date.now()-DBG_T.t0)/60e3;return{m:Math.floor(mm)%1440,h:Math.floor(mm/60)%24,dow:0}}const d=new Date(Date.now()+7*3600e3);return{m:d.getUTCHours()*60+d.getUTCMinutes(),h:d.getUTCHours(),dow:d.getUTCDay()}}
 const hm=t=>{const[a,b]=t.split(':');return +a*60+ +b};
 function nextOf(n,m){const l=SCHED[n].map(x=>x[0]);return l.find(t=>hm(t)>m)||l[0]}
 function LV(){return (ST&&ST.live)||{}}
