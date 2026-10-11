@@ -232,13 +232,14 @@ function focusBot(n){const bt=bots.find(x=>x.n==n);flyTo({z:Math.max(cam.z,3.2),
 function hit(sx,sy){const w=toWorld(sx,sy);let best=null,bd=1e9;for(const bt of bots){const dx=w.x-bt.x,dy=w.y-(bt.y-18);if(Math.abs(dx)<14&&Math.abs(dy)<22){const d=dx*dx+dy*dy;if(d<bd){bd=d;best=bt}}}if(best){showCard(best.n);emote(best,'♪');blip(880)}else hideCard()}
 setTimeout(hideHint,8000);function hideHint(){$('hint').style.opacity=0}
 // ================= SOUND (off by default) =================
-let snd=localStorage.getItem('po_snd')=='1',AC=null;
-function audioInit(){if(snd&&!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}
-function tone(f,d=.08,type='square',v=.04){if(!snd||!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+d)}
-function blip(f){tone(f,.07)}function chime(){tone(880,.12,'triangle',.06);setTimeout(()=>tone(1320,.18,'triangle',.05),110)}
-let stepC=0;function stepSound(){if(snd&&AC&&(++stepC%6==0))tone(120+Math.random()*30,.03,'triangle',.015)}
-function sndUI(){$('snd').textContent=snd?'🔊':'🔇'}sndUI();
-$('snd').onclick=()=>{snd=!snd;localStorage.setItem('po_snd',snd?'1':'0');audioInit();sndUI();blip(700)};
+function audioInit(){AUD.unlock()}
+function sndUI(){$('snd').textContent=AUD.on?'🔊':'🔇';$('snd').classList.toggle('on',AUD.on)}sndUI();
+$('snd').onclick=()=>{AUD.setOn(!AUD.on);sndUI();AUD.blip(700);if(AUD.on)toastMsg('🎵 เปิดเพลงแล้ว');};
+$('vbtn').onclick=()=>{$('vol').classList.toggle('hidden');AUD.blip(600)};
+$('mvol').value=AUD.mv;$('svol').value=AUD.sv;$('mvol').oninput=e=>AUD.setMusic(+e.target.value);$('svol').oninput=e=>{AUD.setSfx(+e.target.value)};$('svol').onchange=()=>AUD.blip(800);
+document.addEventListener('pointerup',()=>AUD.unlock(),{passive:true});document.addEventListener('touchend',()=>AUD.unlock(),{passive:true});
+function toastMsg(t){const d=document.createElement('div');d.className='toast';d.style.setProperty('--c','#f0c060');d.textContent=t;$('toasts').appendChild(d);setTimeout(()=>d.remove(),4300)}function blip(f){AUD.blip(f)}function chime(){AUD.chime()}function stepSound(){AUD.step()}
+setInterval(()=>{const n=bots.filter(b=>b.state=='work'&&b.pose=='sit').length;if(n&&Math.random()<.35*n/6+.1)AUD.type()},260);
 // ================= UI =================
 let status={updated:''},cardFor=null,first=true;
 function drawAv(cvs,n){const g=cvs.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,cvs.width,cvs.height);const s=charSprite(n,0,0,'stand');

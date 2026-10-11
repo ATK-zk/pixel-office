@@ -64,3 +64,10 @@ button{font-family:inherit;cursor:pointer}
 #cardx{position:absolute;right:6px;top:3px;background:none;border:0;color:var(--gold);font-size:16px}
 @media (min-width:800px){#tl{width:250px}#tr{width:240px}.task{font-size:12px}#toasts{top:20px}}
 @media (max-width:600px){.bub{max-width:112px;font-size:10px!important;padding:3px 6px 4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.bub b{font-size:9.5px}}
+
+#vol{position:absolute;right:52px;bottom:40px;width:170px;padding:8px 10px;font-size:12px;animation:none;transition:opacity .2s,transform .2s}
+#vol.hidden{opacity:0;transform:translateX(10px);pointer-events:none}
+#vol .vt{font-family:'Pixelify Sans','Mali';color:var(--gold);margin-bottom:4px}
+#vol label{display:flex;flex-direction:column;gap:2px;margin-top:4px;color:#f3dfae}
+#vol input{width:100%;accent-color:#f0c060}
+#snd.on{box-shadow:0 0 0 2px var(--ink),0 0 12px #f0c060,0 4px 0 2px #0008}
