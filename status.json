@@ -528,7 +528,7 @@
     },
     "side_bias": "both",
     "risk_pct": 0.5,
-    "enabled": true,
+    "enabled": false,
     "valid_until": "2026-10-12T08:35:00+07:00",
     "close_on_remove": false
    }
