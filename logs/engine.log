@@ -9,3 +9,19 @@
 2026-10-11 15:38:42 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":1990773173534791,\"ts\":1791707922574}]"}
 2026-10-11 15:38:45 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
 2026-10-11 15:38:46 EXIT {"t": "2026-10-11T15:38:46+07:00", "tag": "test", "key": "SOL-USD:test", "symbol": "SOL-USD", "strategy": "test", "side": "long", "entry": 109.42, "stop": 107.6408, "target": 110.91919999999999, "exit": 109.41, "qty": 0.109, "pnl": -0.0106, "gross": -0.0011, "fees": 0.0095, "funding": -0.0, "reason": "target", "opened": "2026-10-11T15:38:39+07:00", "risk_usd": 0.1939, "r_multiple": -0.055, "why": "live verification", "plan": "test"}
+2026-10-11 15:39:39 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":3398212730112858,\"ts\":1791707979403}]"}
+2026-10-11 15:39:41 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":3258132655587603,\"ts\":1791707981204,\"arts\":1791707981203}]"}
+2026-10-11 15:39:41 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":7353092276112679,\"ts\":1791707981431,\"arts\":1791707981429}]"}
+2026-10-11 15:39:41 API {"path": "/v1/trade/orders", "status": 400, "body": "[{\"status\":\"err\",\"error\":\"account already has a position sl for this instrument\",\"arts\":1791707981742,\"ts\":1791707981742,\"ref\":\"g-97e2ea04e4e4a\"}]"}
+2026-10-11 15:39:42 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":2954675194185963,\"ts\":1791707982195}]"}
+2026-10-11 15:40:14 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":1318461025700946,\"ts\":1791708014679}]"}
+2026-10-11 15:40:16 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4468108856543339,\"ts\":1791708016497,\"arts\":1791708016496}]"}
+2026-10-11 15:40:16 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":7467115336713220,\"ts\":1791708016740,\"arts\":1791708016738}]"}
+2026-10-11 15:40:17 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4468108856543339,\"ts\":1791708017135,\"arts\":1791708017133}]"}
+2026-10-11 15:40:18 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4160219983138557,\"ts\":1791708018455,\"arts\":1791708018454}]"}
+2026-10-11 15:40:19 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":7467115336713220,\"ts\":1791708019781,\"arts\":1791708019781}]"}
+2026-10-11 15:40:21 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":6578481163157747,\"ts\":1791708021188,\"arts\":1791708021187}]"}
+2026-10-11 15:40:21 RECONCILE: re-placed {"key": "SOL-USD:test", "sl": false, "tp": true}
+2026-10-11 15:40:22 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":6527872293358268,\"ts\":1791708022590}]"}
+2026-10-11 15:40:25 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
+2026-10-11 15:40:26 EXIT {"t": "2026-10-11T15:40:26+07:00", "tag": "test", "key": "SOL-USD:test", "symbol": "SOL-USD", "strategy": "test", "side": "long", "entry": 109.34, "stop": 107.70975, "target": 110.99024999999999, "exit": 109.33, "qty": 0.109, "pnl": -0.0106, "gross": -0.0011, "fees": 0.0095, "funding": -0.0, "reason": "stop", "opened": "2026-10-11T15:40:16+07:00", "risk_usd": 0.1777, "r_multiple": -0.06, "why": "live verification", "plan": "test"}
