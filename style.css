@@ -157,3 +157,5 @@ body.hudoff #tl,body.hudoff #zoombar,body.hudoff #hint,body.hudoff #vol{opacity:
 #pbv,#pbc,#losst,#volt{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif!important;font-variant-numeric:tabular-nums;font-weight:800!important;letter-spacing:0}
 #pbv{font-size:20px!important}#pbc{font-size:14px!important;font-weight:700!important}
 #dots em{font-size:13px!important;color:#d8e6f6!important}
+#ticker{display:none!important}
+#dots em{font-size:15px!important;color:#ffffff!important;font-weight:700;text-shadow:0 1px 0 #000}
