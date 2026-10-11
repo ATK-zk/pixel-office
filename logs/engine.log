@@ -94,3 +94,8 @@
 2026-10-11 22:49:32 EXIT {"t": "2026-10-11T22:49:32+07:00", "tag": "live", "key": "NEAR-USD:mean_reversion", "symbol": "NEAR-USD", "strategy": "mean_reversion", "side": "short", "entry": 5.5249, "stop": 5.6040075823856, "target": 5.33762, "exit": 5.6354, "qty": 33.31, "pnl": -3.8295, "gross": -3.6808, "fees": 0.1487, "funding": 0.0002, "reason": "stop", "opened": "2026-10-11T22:45:03+07:00", "risk_usd": 2.1487, "r_multiple": -1.782, "why": "BB(20,2.0) RSI 77.0", "plan": "2026-10-11 21:05", "interval": "15m"}
 2026-10-11 22:49:53 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":8748063960088736,\"ts\":1791733793629,\"arts\":1791733793628}]"}
 2026-10-11 22:49:53 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":140207029570690,\"ts\":1791733793860,\"arts\":1791733793859}]"}
+2026-10-11 22:57:31 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":140207029570690,\"ts\":1791734251148,\"arts\":1791734251147}]"}
+2026-10-11 22:57:31 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":6065500583511702,\"ts\":1791734251384,\"arts\":1791734251382}]"}
+2026-10-11 23:00:00 SIGNAL vs bias, skipped {"key": "SOL-USD:breakout", "side": "long"}
+2026-10-11 23:00:00 SIGNAL vs bias, skipped {"key": "ETH-USD:breakout", "side": "long"}
+2026-10-11 23:00:01 SIGNAL SKIPPED {"key": "NEAR-USD:mean_reversion", "side": "short", "why": "cooldown 30m after close"}
