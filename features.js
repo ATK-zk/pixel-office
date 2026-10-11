@@ -58,7 +58,7 @@ const _ds19=drawScreens;drawScreens=function(g){_ds19(g);const[X,Y,Wd,Hd]=TVR,x0
   arr.forEach((k,i)=>{const cx=x0+i*cw,up=k.c>=k.o,col=up?'#3fe07a':'#ff5a6a';R(g,cx+cw/2,sy(k.h),1,sy(k.l)-sy(k.h)+1,col);const a=sy(Math.max(k.o,k.c));R(g,cx+1,a,Math.max(1,cw-2),Math.max(1,sy(Math.min(k.o,k.c))-a),col)});
   g.fillStyle='rgba(120,180,255,.06)';g.fillRect(x0,y0,w,6)};
 const _dw19=drawWorld;drawWorld=function(){_dw19();const g=wx,ls=lightState(ST),col={red:'#ff3a3a',green:'#3fe07a',yellow:'#ffd23a',off:'#7a8090'}[ls];
-  if(ls!='off')for(const bt of bots){if(bt.hidden)continue;const x=Math.round(bt.x+14),y=Math.round(bt.y-34);const gr=g.createRadialGradient(x,y,0,x,y,16);gr.addColorStop(0,col);gr.addColorStop(1,col+'00');g.globalAlpha=.55+.3*Math.sin(time*4);g.fillStyle=gr;g.fillRect(x-16,y-16,32,32);g.globalAlpha=1;ell(g,x,y,6,6,OL);ell(g,x,y,5,5,col);R(g,x-2,y-3,2,2,"#fff")}
+  if(false)for(const bt of bots){if(bt.hidden)continue;const x=Math.round(bt.x+14),y=Math.round(bt.y-34);const gr=g.createRadialGradient(x,y,0,x,y,16);gr.addColorStop(0,col);gr.addColorStop(1,col+'00');g.globalAlpha=.55+.3*Math.sin(time*4);g.fillStyle=gr;g.fillRect(x-16,y-16,32,32);g.globalAlpha=1;ell(g,x,y,6,6,OL);ell(g,x,y,5,5,col);R(g,x-2,y-3,2,2,"#fff")}
   for(let i=confetti.length-1;i>=0;i--){const c=confetti[i];c.t+=1/60;c.vy+=140/60;c.x+=c.vx/60;c.y+=c.vy/60;if(c.t>2.5){confetti.splice(i,1);continue}R(g,c.x,c.y,2,2,c.c)}};
 // ---- halted: everyone to the coffee area ----
 const COFFEE=[{x:44,y:110,ex:44},{x:120,y:158,ex:120},{x:96,y:240,ex:96},{x:60,y:250,ex:60},{x:140,y:250,ex:140},{x:150,y:200,ex:150}];
