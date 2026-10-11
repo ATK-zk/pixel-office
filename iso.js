@@ -110,7 +110,8 @@ for(const o of OBJ)if(o.fp){const[x,y,w,d]=o.fp;softShadow(b,x+w/2+3,y+d/2+3,Mat
 // ---- particles / ambience in iso ----
 puff=function(x,y){parts.push({x,y:y+30,h:30,vx:(Math.random()-.5)*3,vy:-8-Math.random()*4,t:0,life:1.8})};
 const dust=[];const GLOWCOL={David:'140,200,255',Kim:'120,230,255',Jane:'140,255,180',Alex:'255,200,130',Jhon:'255,150,150',Su:'200,170,255'};
-const [vig,vgx]=mk(IW,IH);{const gr=vgx.createRadialGradient(IW/2,IH/2,IH*.4,IW/2,IH/2,IW*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(10,4,20,.5)');vgx.fillStyle=gr;vgx.fillRect(0,0,IW,IH)}
+const [vig,vgx]=mk(IW,IH);{const gr=vgx.createRadialGradient(IW/2,IH/2,IH*.4,IW/2,IH/2,IW*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(10,4,20,.18)');vgx.fillStyle=gr;vgx.fillRect(0,0,IW,IH)}
+for(const l of [[90,150,80],[90,250,80],[60,330,70],[100,420,80],[90,530,70],[690,160,80],[700,260,80],[690,360,80],[700,460,80],[720,540,70],[300,520,70],[480,520,70]])LIGHTS.push([l[0],l[1],l[2],'255,236,200']);nightK=-1;tickClock();
 const FLOOR=[1,.5,-1,.5,O.x+72,O.y-36];
 // floor slab (static)
 const [base,bsg]=mk(IW,IH);(function(){const g=bsg,T=12;const a=I(768,72),c=I(768,H),d=I(0,H);
