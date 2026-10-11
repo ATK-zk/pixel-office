@@ -1,0 +1,33 @@
+/* v13 ROMC-style UI: rounded blue/white panels with gold accents (original) */
+:root{--gold:#e8b84a;--gold2:#c8962e;--ink:#2a3a6a;--rb:#5a86d6}
+html,body{background:#2a1a2e;color:#2a3a6a}
+.panel{background:linear-gradient(180deg,#ffffffee,#e4eefcee)!important;border:2px solid var(--rb)!important;border-radius:12px!important;
+ box-shadow:0 0 0 2px #fff,0 0 0 3px var(--gold),0 6px 14px #1a204066!important;color:#2a3a6a}
+.panel:before,.panel:after{background:var(--gold);box-shadow:0 0 0 1px #fff;width:7px;height:7px;top:-4px;left:-4px}
+.panel:after{left:auto;right:-4px}
+.tlhead b,.mebody b,#vol .vt{color:#2e5aa8!important;background:none!important;-webkit-text-fill-color:#2e5aa8;font-weight:700}
+.tlhead,.tlhead .chev,#clock2{color:#2e5aa8!important}
+.ib{background:linear-gradient(#fdfeff,#d6e4fa)!important;border:2px solid var(--rb)!important;border-radius:10px;box-shadow:inset 0 -2px 0 #b0c4ea,0 2px 0 #3a5aa055}
+.ib i{color:#2a3a6a!important}
+.avw{border-color:var(--gold2);background:radial-gradient(#ffffff,#bcd4f8)}
+.lv{background:var(--gold);color:#fff;text-shadow:0 1px #8a5a1a}
+.bar{background:#c8d6ee;border-color:#5a76b0}
+.small{color:#5a6a90}
+.rb{background:linear-gradient(#ffffff,#cfe0fa)!important;border:2px solid var(--rb)!important;color:#2e5aa8!important;box-shadow:0 0 0 2px var(--gold),0 3px 0 2px #1a204055!important}
+#snd.on{box-shadow:0 0 0 2px var(--gold),0 0 12px #ffe08a!important}
+#hudbtn{background:#ffffffd0!important;border:2px solid var(--rb)!important;color:#2e5aa8!important}
+#hint{background:#ffffffe6!important;color:#2a3a6a!important;border-color:var(--rb)!important}
+.toast{background:linear-gradient(#ffffff,#e4eefc)!important;color:#2a3a6a;border:2px solid var(--rb)!important;box-shadow:0 0 0 2px var(--gold),0 6px 14px #0005!important}
+#cstat{color:#1a2a5a}#crole{color:#5a6a90}#cact{color:#2a8a6a}#ctime{color:#7a86a8}#cardx{color:#2e5aa8}
+#vol label{color:#2a3a6a}
+.bub{background:#ffffffeb!important;color:#2a2a3a!important;border:1px solid #8aa0d0!important;border-radius:10px!important;box-shadow:0 2px 6px #1a204044!important}
+.bub:after{border-top-color:#8aa0d0!important}
+.bub b{font-family:'Mali',sans-serif!important;font-weight:700}
+.bub.Alex b{color:#d0661e}.bub.Jhon b{color:#5a6a8a}.bub.Su b{color:#7a4ac0}
+.tag{background:none!important;text-align:center;line-height:1.05;font-family:'Mali',sans-serif!important;color:#fff!important;
+ text-shadow:-1px 0 #1a1020,1px 0 #1a1020,0 -1px #1a1020,0 1px #1a1020!important}
+.tag b{display:block;font-size:10.5px;font-weight:700}
+.tag i{display:block;font-style:normal;font-size:8.5px;color:#bfe0ff}
+#board{background:linear-gradient(#ffffff,#dfeafc)!important;border:2px solid var(--rb)!important;border-radius:12px!important;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--gold),0 6px 12px #0005!important;color:#2a3a6a}
+#board .bt{color:#2e5aa8;text-shadow:none}#pv{color:#1a2a5a}#pu{color:#5a6a90}#pc.up{color:#1f9a4a}#pc.dn{color:#d03a3a}
+#board:before,#board:after{background:#8a5a36;border-color:#4a2a18}
