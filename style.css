@@ -150,3 +150,7 @@ body.hudoff #tl,body.hudoff #zoombar,body.hudoff #hint,body.hudoff #vol{opacity:
 #card{bottom:calc(env(safe-area-inset-bottom) + 150px)!important;z-index:12!important}#info{bottom:calc(env(safe-area-inset-bottom) + 150px)!important;z-index:12!important}
 #halt{top:calc(env(safe-area-inset-top) + 60px)!important}
 .bub{max-width:132px!important}.bub.open{max-width:220px!important}
+#card.hidden{display:none!important}
+#card,#info{background:#1a1410!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;color:#fff!important}
+#card #crole,#card #cact,#card #ctime{color:#e8dcc4!important}#info .sub{color:#e0d2b0!important}
+#pbar .pb2 .lbl{font-size:12.5px!important}#losst,#volt{font-size:13px!important}#dots em{font-size:12px!important}.meter{height:9px}
