@@ -314,7 +314,7 @@ mini.addEventListener('click',e=>{const r=mini.getBoundingClientRect();flyTo({x:
 let last=performance.now(),mt=0;
 function placeBoard(){const B=$('board');const p=toScreen(384,280);const sc=Math.max(.4,Math.min(2.2,cam.z/1.7));const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
   B.style.transform=`translate(${(p.x-w/2)|0}px,${(p.y-h)|0}px) scale(${sc.toFixed(3)})`}
-function placeDom(){placeBoard();for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=bt.say||status[bt.n]||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
+function placeDom(){placeBoard();for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=(typeof nowStatus=='function'?nowStatus(bt.n):(bt.say||status[bt.n]))||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
   if(B._h!==html){B.innerHTML=html;B._h=html;B._w=B.offsetWidth;B._hh=B.offsetHeight}
   const p=toScreen(bt.x,bt.y-(bt.pose=='sit'?42:40)-(bt.emote?14:0));const w=B._w||100,h=B._hh||30;let x=p.x-w/2,y=p.y-h-8;
   const cx=Math.max(6,Math.min(vw-w-6,x)),cy=Math.max(6,Math.min(vh-h-6,y));B.style.setProperty('--tx',Math.max(-w/2+10,Math.min(w/2-10,x-cx))+'px');
