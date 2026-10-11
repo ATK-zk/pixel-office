@@ -36,10 +36,33 @@ const AUD=(()=>{
     if(b>=16||loop)for(let k=0;k<6;k++)harp(up[k%up.length]+(k>2?12:0),t+k*BEAT/2,b>=16?.06:.035);
     if(b%4==0)strings(up,t,BEAT*12);
     let bt=t;for(const[m,d]of MEL[b]){if(m)flute(m+(loop&&b>=24&&b<30?0:0),bt,d*.95);bt+=d*BEAT}}
-  function tick(){if(!ac||!on)return;while(nextT<ac.currentTime+.6){scheduleBar(step,nextT);nextT+=BEAT*3;step++}}
-  function startMusic(){if(!ac||timer)return;nextT=ac.currentTime+.15;step=0;musicG.gain.cancelScheduledValues(ac.currentTime);musicG.gain.setValueAtTime(0,ac.currentTime);musicG.gain.linearRampToValueAtTime(mv*.35,ac.currentTime+2);timer=setInterval(tick,120);tick()}
-  function stopMusic(){if(timer){clearInterval(timer);timer=null}if(ac){musicG.gain.cancelScheduledValues(ac.currentTime);musicG.gain.setTargetAtTime(0,ac.currentTime,.2)}}
-  function unlock(){if(!on)return;try{init();if(!ac)return;if(ac.state!=='running')ac.resume();const b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(0);startMusic()}catch(e){console.warn(e)}}
+  // ---- offline render of the loop -> WAV -> <audio loop> (survives iOS silent switch) ----
+  let el=null,elSrc=null,renderP=null,musicURL=null;
+  const SILENT='data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQQAAAAAAAAA';
+  function wav(buf){const ch=buf.numberOfChannels,len=buf.length,sr=buf.sampleRate,ab=new ArrayBuffer(44+len*ch*2),v=new DataView(ab);
+    const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};ws(0,'RIFF');v.setUint32(4,36+len*ch*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);
+    v.setUint32(24,sr,true);v.setUint32(28,sr*ch*2,true);v.setUint16(32,ch*2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,len*ch*2,true);
+    const d=[];for(let c=0;c<ch;c++)d.push(buf.getChannelData(c));let o=44;for(let i=0;i<len;i++)for(let c=0;c<ch;c++){const x=Math.max(-1,Math.min(1,d[c][i]));v.setInt16(o,x*32767,true);o+=2}
+    return new Blob([ab],{type:'audio/wav'})}
+  function renderMusic(){if(renderP)return renderP;
+    const O=window.OfflineAudioContext||window.webkitOfflineAudioContext;const SR=22050,LOOP=BEAT*3*32,TAIL=2.5;
+    const off=new O(2,Math.ceil(SR*(LOOP+TAIL)),SR);const sv={ac,musicG};ac=off;
+    musicG=off.createGain();musicG.gain.value=.5;const r=off.createConvolver();r.buffer=impulse();const rg=off.createGain();rg.gain.value=.28;musicG.connect(off.destination);musicG.connect(r);r.connect(rg);rg.connect(off.destination);
+    for(let i=0;i<32;i++)scheduleBar(i,.02+i*BEAT*3);ac=sv.ac;musicG=sv.musicG;
+    renderP=new Promise((res,rej)=>{off.oncomplete=e=>res(e.renderedBuffer);const p=off.startRendering();if(p&&p.then)p.then(res,rej)}).then(buf=>{
+      const L=Math.floor(SR*LOOP),out=(ac||off).createBuffer?null:null;const chs=[];
+      for(let c=0;c<2;c++){const d=buf.getChannelData(c),o=new Float32Array(L);o.set(d.subarray(0,L));for(let i=L;i<d.length;i++)o[i-L]+=d[i];chs.push(o)}
+      const fake={numberOfChannels:2,length:L,sampleRate:SR,getChannelData:c=>chs[c]};musicURL=URL.createObjectURL(wav(fake));return musicURL});
+    return renderP}
+  function ensureEl(){if(el)return;el=document.createElement('audio');el.setAttribute('playsinline','');el.setAttribute('webkit-playsinline','');el.loop=true;el.preload='auto';el.src=SILENT;document.body.appendChild(el)}
+  function applyVol(){if(el)el.volume=Math.min(1,mv*0.9)}
+  function startMusic(){ensureEl();applyVol();
+    try{el.play().catch(()=>{})}catch(e){} // inside the gesture: unlocks element + playback session
+    renderMusic().then(url=>{if(!on)return;if(el.src!==url){el.src=url;el.loop=true}applyVol();el.play().catch(err=>console.warn('music play',err))}).catch(e=>console.warn('render',e))}
+  function stopMusic(){if(el){try{el.pause()}catch(e){}}}
+  function unlock(){if(!on)return;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+    try{init();if(ac&&ac.state!=='running')ac.resume();if(ac){const b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(0)}}catch(e){console.warn(e)}
+    if(!el||el.paused)startMusic()}
   const ok=()=>on&&ac&&ac.state==='running';
   function beep(f,d,type,v,t0=0){const t=ac.currentTime+t0,g=env(t,.005,d,v,sfxG);osc(type,f,t,d,g)}
   function noise(d,v,fr){const t=ac.currentTime,len=Math.floor(ac.sampleRate*d),b=ac.createBuffer(1,len,ac.sampleRate),x=b.getChannelData(0);for(let i=0;i<len;i++)x[i]=(Math.random()*2-1)*(1-i/len);
@@ -47,7 +70,7 @@ const AUD=(()=>{
   const api={
     get on(){return on},
     setOn(v){on=v;SV('po_snd',v?'1':'0');if(v)unlock();else stopMusic()},
-    setMusic(v){mv=v;SV('po_mv',v);if(ac){musicG.gain.cancelScheduledValues(ac.currentTime);musicG.gain.setTargetAtTime(on?v*.35:0,ac.currentTime,.1)}},
+    setMusic(v){mv=v;SV('po_mv',v);applyVol()},
     setSfx(v){sv=v;SV('po_sv',v);if(ac)sfxG.gain.setTargetAtTime(v*.6,ac.currentTime,.05)},
     get mv(){return mv},get sv(){return sv},unlock,
     blip(f=660){if(ok()){beep(f,.06,'square',.05);beep(f*1.5,.05,'sine',.03,.03)}},
@@ -55,5 +78,5 @@ const AUD=(()=>{
     step(){if(ok()&&Math.random()<.5)noise(.05,.12,380+Math.random()*120)},
     type(){if(ok())noise(.018,.07,2400+Math.random()*1500)}};
   // resume after iOS interruptions
-  document.addEventListener('visibilitychange',()=>{if(!ac)return;if(document.hidden)ac.suspend();else if(on)ac.resume()});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(ac)ac.suspend();stopMusic()}else if(on){if(ac)ac.resume();if(el)el.play().catch(()=>{})}});
   return api})();

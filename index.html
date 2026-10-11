@@ -7,11 +7,15 @@
 <title>Pixel Office · David Kim Jane</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Mali:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=8">
 </head><body>
 <canvas id="c"></canvas>
 <div id="bubbles"></div>
+<div id="board"><div class="bt">💰 พอร์ต <span id="pv">—</span></div><div id="pc">—</div><div id="pu">อัปเดต —</div></div>
+<button id="hudbtn" title="ซ่อน/แสดงเมนู">👁</button>
 <div id="tl" class="panel">
+  <div class="tlhead"><canvas id="meav2" width="24" height="26"></canvas><b>PIXEL OFFICE</b><span id="clock2">--:--</span><span id="dn">☀️</span><span class="chev">▾</span></div>
+  <div class="tlbody">
   <div class="menu">
     <button class="ib" data-f="David"><canvas class="mav" data-n="David" width="12" height="12"></canvas><i>David</i></button>
     <button class="ib" data-f="Kim"><canvas class="mav" data-n="Kim" width="12" height="12"></canvas><i>Kim</i></button>
@@ -25,10 +29,7 @@
   <div class="bar"><span class="fill g" style="width:100%"></span><span class="lbl">TEAM</span><em>6/6 ออนไลน์</em></div>
   <div class="bar"><span class="fill b" id="tbar"></span><span class="lbl">DAY</span><em id="clock">--:--</em></div>
   <div id="upd" class="small">⏳ กำลังโหลด…</div></div></div>
-</div>
-<div id="tr">
-  <div class="panel mm"><canvas id="mini"></canvas><div class="cap"><span id="dn">กลางวัน</span></div></div>
-  <div class="panel tasks"><div class="th"><span>✦ TASKS</span><small id="tt">▾</small></div><div id="tasklist"></div></div>
+  </div>
 </div>
 <div id="toasts"></div>
 <div id="hint">ลากเพื่อเลื่อน · ถ่างนิ้ว/ล้อเมาส์ซูม · แตะ 2 ครั้งรีเซ็ต</div>
@@ -42,7 +43,7 @@
   <div class="avw big"><canvas id="avatar" width="24" height="26"></canvas></div>
   <div class="cbody"><div id="cname"></div><div id="crole"></div><div id="cstat"></div><div id="cact"></div><div id="ctime"></div></div>
 </div>
-<script src="audio.js?v=6"></script>
-<script src="art.js?v=6"></script>
-<script src="game.js?v=6"></script>
+<script src="audio.js?v=8"></script>
+<script src="art.js?v=8"></script>
+<script src="game.js?v=8"></script>
 </body></html>

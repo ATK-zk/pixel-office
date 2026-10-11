@@ -1,4 +1,5 @@
 'use strict';
+function safe(f,l){try{f()}catch(e){console.error('init '+l,e);window.__err=(window.__err||'')+l+': '+e.message+'\n'}}
 // ================= MAP =================
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 const [world,wx]=mk(W,H),[bg,b]=mk(W,H),[frames,fg]=mk(W,H),[city,cg]=mk(W,60),[city2,cg2]=mk(W,60);
@@ -238,6 +239,12 @@ $('snd').onclick=()=>{AUD.setOn(!AUD.on);sndUI();AUD.blip(700);if(AUD.on)toastMs
 $('vbtn').onclick=()=>{$('vol').classList.toggle('hidden');AUD.blip(600)};
 $('mvol').value=AUD.mv;$('svol').value=AUD.sv;$('mvol').oninput=e=>AUD.setMusic(+e.target.value);$('svol').oninput=e=>{AUD.setSfx(+e.target.value)};$('svol').onchange=()=>AUD.blip(800);
 document.addEventListener('pointerup',()=>AUD.unlock(),{passive:true});document.addEventListener('touchend',()=>AUD.unlock(),{passive:true});
+const LSg=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},LSs=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+document.body.classList.toggle('hudoff',LSg('po_hud','1')=='0');$('tl').classList.toggle('collapsed',LSg('po_tl','0')=='0');
+$('hudbtn').onclick=()=>{const off=!document.body.classList.contains('hudoff');document.body.classList.toggle('hudoff',off);LSs('po_hud',off?'0':'1');$('hudbtn').textContent=off?'☰':'👁';$('vol').classList.add('hidden');AUD.blip(500)};
+$('hudbtn').textContent=document.body.classList.contains('hudoff')?'☰':'👁';
+document.querySelector('.tlhead').onclick=()=>{const c=$('tl').classList.toggle('collapsed');LSs('po_tl',c?'0':'1');AUD.blip(560)};
+document.addEventListener('pointerdown',e=>{if(!$('vol').classList.contains('hidden')&&!e.target.closest('#vol')&&!e.target.closest('#vbtn'))$('vol').classList.add('hidden')},true);
 function toastMsg(t){const d=document.createElement('div');d.className='toast';d.style.setProperty('--c','#f0c060');d.textContent=t;$('toasts').appendChild(d);setTimeout(()=>d.remove(),4300)}function blip(f){AUD.blip(f)}function chime(){AUD.chime()}function stepSound(){AUD.step()}
 setInterval(()=>{const n=bots.filter(b=>b.state=='work'&&b.pose=='sit').length;if(n&&Math.random()<.35*n/6+.1)AUD.type()},260);
 // ================= UI =================
@@ -248,27 +255,33 @@ function showCard(n){cardFor=n;drawAv($('avatar'),n);$('cname').textContent=n;$(
 function fillCard(){if(!cardFor)return;const bt=bots.find(x=>x.n==cardFor);$('cstat').textContent='📌 '+(status[cardFor]||'—');$('cact').textContent='ตอนนี้: '+(bt.say||(bt.pose=='sip'?'☕ จิบกาแฟที่โต๊ะ':'💻 ทำงานที่โต๊ะ'));$('ctime').textContent='🕒 อัปเดตล่าสุด '+(status.updated||'—')}
 function hideCard(){cardFor=null;$('card').classList.add('hidden')}$('cardx').onclick=hideCard;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function renderTasks(changed){$('tasklist').innerHTML=Object.keys(CH).map(n=>`<div class="task${changed.includes(n)?' new':''}" data-n="${n}" style="--c:${CH[n].col}"><b>● ${n}</b> <span class="d">${CH[n].role.split(' · ')[0]}</span><div>${esc(status[n]||'—')}</div></div>`).join('');
+function renderBoard(){$('board')._w=0;const v=+status.portfolio,st=+(status.portfolio_start??400)||400;const ok=status.portfolio!=null&&status.portfolio!==''&&isFinite(v);
+  $('pv').textContent=ok?'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+  if(ok){const d=v-st,p=d/st*100,sg=d>=0?'+':'−';$('pc').textContent=`${d>=0?'▲':'▼'} ${sg}$${Math.abs(d).toFixed(2)} (${sg}${Math.abs(p).toFixed(2)}%)`;$('pc').className=d>=0?'up':'dn'}else{$('pc').textContent='—';$('pc').className=''}
+  const u=String(status.portfolio_updated||'');const m=u.match(/(\d{1,2}:\d{2})/);$('pu').textContent='อัปเดต '+(m?m[1]:(u||'—'))}
+function renderTasks(changed){safe(renderBoard,'board');$('upd').textContent='🕒 อัปเดต '+(status.updated||'—');if(!$('tasklist'))return;$('tasklist').innerHTML=Object.keys(CH).map(n=>`<div class="task${changed.includes(n)?' new':''}" data-n="${n}" style="--c:${CH[n].col}"><b>● ${n}</b> <span class="d">${CH[n].role.split(' · ')[0]}</span><div>${esc(status[n]||'—')}</div></div>`).join('');
   document.querySelectorAll('.task').forEach(el=>el.onclick=()=>focusBot(el.dataset.n));$('upd').textContent='🕒 อัปเดต '+(status.updated||'—')}
 function toast(n,txt){const d=document.createElement('div');d.className='toast';d.style.setProperty('--c',CH[n].col);d.innerHTML=`<b>${n}</b> อัปเดตสถานะ · ${esc(txt)}`;$('toasts').appendChild(d);setTimeout(()=>d.remove(),4300);chime()}
 async function poll(){try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const s=await r.json();const changed=Object.keys(CH).filter(n=>s[n]!==status[n]);
   if(!first)for(const n of changed){toast(n,s[n]);const bt=bots.find(x=>x.n==n);emote(bt,'!');bubs[n].classList.remove('flash');void bubs[n].offsetWidth;bubs[n].classList.add('flash')}
   status=s;renderTasks(first?[]:changed);fillCard();first=false}catch(e){$('upd').textContent='⚠️ โหลดสถานะไม่ได้'}}
-$('tasks')||0;document.querySelector('.th').onclick=()=>{document.querySelector('.tasks').classList.toggle('closed');$('tt').textContent=document.querySelector('.tasks').classList.contains('closed')?'▸':'▾'};
-if(innerWidth<600){document.querySelector('.tasks').classList.add('closed');$('tt').textContent='▸'}
+if(document.querySelector('.th'))document.querySelector('.th').onclick=()=>{document.querySelector('.tasks').classList.toggle('closed');$('tt').textContent=document.querySelector('.tasks').classList.contains('closed')?'▸':'▾'};
+if(innerWidth<600&&document.querySelector('.tasks')){document.querySelector('.tasks').classList.add('closed');$('tt').textContent='▸'}
 const bubLayer=$('bubbles'),bubs={},tags={};
 for(const n in CH){const d=document.createElement('div');d.className='bub '+n;bubLayer.appendChild(d);bubs[n]=d;const t=document.createElement('div');t.className='tag';t.textContent=n;t.style.color=CH[n].col;bubLayer.appendChild(t);tags[n]=t}
 function pad(x){return String(x).padStart(2,'0')}
 function tickClock(){const d=new Date();$('clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes());$('tbar').style.width=((d.getHours()*60+d.getMinutes())/1440*100)+'%';
-  const nk=nightness(hourNow());$('dn').textContent=nk>=1?'กลางคืน 🌙':nk>0?'โพล้เพล้ 🌇':'กลางวัน ☀️';if(Math.abs(nk-nightK)>.02||!lightC){nightK=nk;buildLights()}}
+  const nk=nightness(hourNow());$('dn').textContent=nk>=1?'🌙':nk>0?'🌇':'☀️';if($('clock2'))$('clock2').textContent=$('clock').textContent;if(Math.abs(nk-nightK)>.02||!lightC){nightK=nk;buildLights()}}
 // minimap
-const mini=$('mini');mini.width=W/4;mini.height=H/4;const mg=mini.getContext('2d');const [mbg,mbgG]=mk(W/4,H/4);
+const mini=$('mini')||document.createElement('canvas');mini.width=W/4;mini.height=H/4;const mg=mini.getContext('2d');const [mbg,mbgG]=mk(W/4,H/4);
 function drawMini(){mg.drawImage(mbg,0,0);for(const bt of bots){mg.fillStyle=OL;mg.fillRect(bt.x/4-3,bt.y/4-7,6,6);mg.fillStyle=CH[bt.n].col;mg.fillRect(bt.x/4-2,bt.y/4-6,4,4)}
   const a=toWorld(0,0),c=toWorld(vw,vh);mg.strokeStyle='#ffe69a';mg.lineWidth=1;const x0=Math.max(0,a.x/4),y0=Math.max(0,a.y/4);mg.strokeRect(x0+.5,y0+.5,Math.min(W,c.x)/4-x0-1,Math.min(H,c.y)/4-y0-1)}
 mini.addEventListener('click',e=>{const r=mini.getBoundingClientRect();flyTo({x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H});blip(600)});
 // ================= LOOP =================
 let last=performance.now(),mt=0;
-function placeDom(){for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=bt.say||status[bt.n]||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
+function placeBoard(){const B=$('board');const p=toScreen(470,262);const sc=Math.max(.55,Math.min(1.6,cam.z/1.6));const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
+  B.style.transform=`translate(${(p.x-w/2)|0}px,${(p.y-h)|0}px) scale(${sc.toFixed(3)})`}
+function placeDom(){placeBoard();for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=bt.say||status[bt.n]||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
   if(B._h!==html){B.innerHTML=html;B._h=html;B._w=B.offsetWidth;B._hh=B.offsetHeight}
   const p=toScreen(bt.x,bt.y-(bt.pose=='sit'?42:40)-(bt.emote?14:0));const w=B._w||100,h=B._hh||30;let x=p.x-w/2,y=p.y-h-8;
   const cx=Math.max(6,Math.min(vw-w-6,x)),cy=Math.max(6,Math.min(vh-h-6,y));B.style.setProperty('--tx',Math.max(-w/2+10,Math.min(w/2-10,x-cx))+'px');
@@ -281,12 +294,11 @@ var frame=function(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;
   const s=cam.z*dpr;ctx.setTransform(s,0,0,s,Math.round((vw/2-cam.x*cam.z)*dpr),Math.round((vh/2-cam.y*cam.z)*dpr));ctx.drawImage(world,0,0);
   placeDom();if((mt+=dt)>.2){mt=0;drawMini()}requestAnimationFrame(frame)}
 // ================= INIT =================
-function safe(f,l){try{f()}catch(e){console.error('init '+l,e);window.__err=(window.__err||'')+l+': '+e.message+'\n'}}
 safe(tickClock,'clock');safe(()=>{renderTasks([]);poll();setInterval(poll,8000)},'status');setInterval(()=>safe(tickClock,'clock'),1000);
 safe(buildBG,'bg');safe(buildCity,'city');safe(buildProps,'props');
 safe(()=>{for(const p of PROPS){if(p.c.width>4)softShadow(b,p.x-p.ox+p.c.width/2,p.y-2,p.c.width*.45,4,.3)}},'shadows');
 safe(()=>{mbgG.imageSmoothingEnabled=true;wx.drawImage(bg,0,0);drawSky(wx);for(const p of PROPS)wx.drawImage(p.c,p.x-p.ox,p.y-p.oy);mbgG.drawImage(world,0,0,W/4,H/4)},'minibg');
-safe(()=>{document.querySelectorAll('.mav').forEach(c=>drawAv(c,c.dataset.n));drawAv($('meav'),'David')},'avatars');
+safe(()=>{document.querySelectorAll('.mav').forEach(c=>drawAv(c,c.dataset.n));drawAv($('meav'),'David');drawAv($('meav2'),'David')},'avatars');
 addEventListener('resize',resize);safe(resize,'resize');safe(drawMini,'mini');
 const _frame=frame;let ferr=0;frame=function(now){try{_frame(now)}catch(e){if(ferr++<3)console.error('frame',e);requestAnimationFrame(frame)}};
 requestAnimationFrame(frame);
