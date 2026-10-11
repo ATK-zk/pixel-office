@@ -25,3 +25,6 @@
 2026-10-11 15:40:22 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":6527872293358268,\"ts\":1791708022590}]"}
 2026-10-11 15:40:25 API {"path": "/v1/trade/orders/all", "status": 200, "body": "{\"status\":\"ok\"}"}
 2026-10-11 15:40:26 EXIT {"t": "2026-10-11T15:40:26+07:00", "tag": "test", "key": "SOL-USD:test", "symbol": "SOL-USD", "strategy": "test", "side": "long", "entry": 109.34, "stop": 107.70975, "target": 110.99024999999999, "exit": 109.33, "qty": 0.109, "pnl": -0.0106, "gross": -0.0011, "fees": 0.0095, "funding": -0.0, "reason": "stop", "opened": "2026-10-11T15:40:16+07:00", "risk_usd": 0.1777, "r_multiple": -0.06, "why": "live verification", "plan": "test"}
+2026-10-11 15:40:46 STOP
+2026-10-11 15:40:48 START strategy engine (LIVE) {"limits": {"base": 429.85, "max_risk_pct": 0.02, "lev_trade": 10.0, "lev_total": 15.0, "max_open": 3, "max_open_risk_pct": 0.06, "daily_loss_pct": 0.06, "weekly_loss_pct": 0.15, "max_dd_pct": 0.25, "review_r": -6.0, "review_after_n": 20, "loss_streak": 3, "streak_pause_h": 4, "taker_fee": 0.0004, "maker_fee": 0.000125, "loop_s": 10, "status_every_s": 60, "event_pad_min": 30}}
+2026-10-11 15:40:48 PLAYBOOK {"entries": ["SOL-USD:breakout bias=both risk=2.00%", "BTC-USD:breakout bias=both risk=2.00%"]}
