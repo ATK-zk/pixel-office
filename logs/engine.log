@@ -74,3 +74,5 @@
 2026-10-11 21:45:07 ENTRY {"key": "DOGE-USD:trend_follow", "side": "long", "entry": 0.085744, "qty": 5965.0, "stop": 0.08509773756225952, "target": null, "why": "EMA9/21 cross"}
 2026-10-11 21:45:17 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":8975618327268423,\"ts\":1791729917829,\"arts\":1791729917827}]"}
 2026-10-11 21:45:18 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4596534335064050,\"ts\":1791729918062,\"arts\":1791729918060}]"}
+2026-10-11 22:05:50 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":4596534335064050,\"ts\":1791731150053,\"arts\":1791731150053}]"}
+2026-10-11 22:05:50 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":689467351581124,\"ts\":1791731150304,\"arts\":1791731150303}]"}
