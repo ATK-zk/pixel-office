@@ -84,7 +84,7 @@ body.hudoff #tl,body.hudoff #zoombar,body.hudoff #hint,body.hudoff #vol{opacity:
 #tl.collapsed .tlbody{display:none}#tl.collapsed .chev{transform:rotate(-90deg)}
 #tl:not(.collapsed) .tlhead{margin-bottom:6px}
 
-#board{position:fixed;left:0;top:0;transform-origin:50% 100%;pointer-events:none;text-align:center;padding:5px 12px 6px;min-width:150px;
+#board{position:fixed;left:0;top:0;transform-origin:50% 100%;pointer-events:none;text-align:center;padding:5px 12px 6px;min-width:130px;
  background:linear-gradient(#5a3a1e,#3e2612);border:3px solid #f0c060;border-radius:6px;box-shadow:0 0 0 2px #1a0f0a,inset 0 0 0 2px #7a5228,inset 0 3px 0 3px #ffffff10,0 6px 0 #0007;color:#fff3d0;will-change:transform}
 #board:before,#board:after{content:"";position:absolute;bottom:-14px;width:5px;height:12px;background:#4a2c18;border:1px solid #1a0f0a}
 #board:before{left:22%}#board:after{right:22%}

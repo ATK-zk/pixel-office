@@ -114,7 +114,7 @@ const SPOTS=[
  {x:676,y:400,ex:760,dir:0,pose:'couch',say:'🛋️ พักบนโซฟา'},
  {x:110,y:434,ex:170,dir:1,pose:'stand',say:'🗂️ เตรียมห้องประชุม'},{x:748,y:318,ex:748,dir:1,pose:'stand',say:'🐟 ให้อาหารปลา'}];
 const bots=Object.keys(CH).map((n,i)=>({n,x:SEAT[n].x,y:SEAT[n].y,dir:0,state:'work',t:6+i*7+Math.random()*8,path:[],f:0,ft:0,say:null,pose:'sit',blink:0,bt:2+Math.random()*3,emote:null}));
-function route(bt,from,to){bt.path=[{x:from.ex,y:from.y},{x:from.ex,y:AISLE+6},{x:to.ex,y:AISLE+6},{x:to.ex,y:to.y},{x:to.x,y:to.y}]}
+function route(bt,from,to){bt.path=[{x:from.ex,y:from.y},{x:from.ex,y:AISLE+32},{x:to.ex,y:AISLE+32},{x:to.ex,y:to.y},{x:to.x,y:to.y}]}
 function plan(bt){bt.from={x:bt.x,y:bt.y,ex:SEAT[bt.n].ex};let tg;
   if(Math.random()<.3){const o=bots.filter(x=>x!==bt&&x.state=='work');if(o.length){const ob=o[Math.floor(Math.random()*o.length)],s=SEAT[ob.n];tg={x:s.ex,y:s.y,ex:s.ex,dir:s.ex>s.x?2:3,pose:'wave',say:'💬 คุยกับ '+ob.n,visit:ob}}}
   if(!tg)tg=SPOTS[Math.floor(Math.random()*SPOTS.length)];
@@ -206,7 +206,7 @@ function softShadowFast(g,x,y){g.drawImage(shC,Math.round(x)-12,Math.round(y)-4)
 // ================= CAMERA / INPUT =================
 let dpr=1,vw=0,vh=0;const cam={x:W/2,y:H/2,z:2},tcam={x:W/2,y:H/2,z:2};let ease=false;
 function limits(){const fit=Math.min(vw/W,vh/H);return{min:fit*.95,max:7}}
-function homeCam(){return vw<600?{z:1.15,x:402,y:220}:{z:Math.max(Math.min(vw/W,vh/H)*1.02,1),x:W/2,y:H/2-6}}
+function homeCam(){return vw<600?{z:0.98,x:384,y:240}:{z:Math.max(Math.min(vw/W,vh/H)*1.02,1),x:W/2,y:H/2-6}}
 function clampC(c){const L=limits();c.z=Math.max(L.min,Math.min(L.max,c.z));const hw=vw/2/c.z,hh=vh/2/c.z;c.x=hw*2>=W?W/2:Math.max(hw,Math.min(W-hw,c.x));c.y=hh*2>=H?H/2:Math.max(hh,Math.min(H-hh,c.y));return c}
 function flyTo(o){Object.assign(tcam,clampC(Object.assign({},cam,o)));ease=true}
 function resetCam(){flyTo(homeCam())}
@@ -279,14 +279,14 @@ function drawMini(){mg.drawImage(mbg,0,0);for(const bt of bots){mg.fillStyle=OL;
 mini.addEventListener('click',e=>{const r=mini.getBoundingClientRect();flyTo({x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H});blip(600)});
 // ================= LOOP =================
 let last=performance.now(),mt=0;
-function placeBoard(){const B=$('board');const p=toScreen(470,262);const sc=Math.max(.55,Math.min(1.6,cam.z/1.6));const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
+function placeBoard(){const B=$('board');const p=toScreen(384,290);const sc=Math.max(.4,Math.min(2.2,cam.z/1.7));const w=B._w||(B._w=B.offsetWidth),h=B._h||(B._h=B.offsetHeight);
   B.style.transform=`translate(${(p.x-w/2)|0}px,${(p.y-h)|0}px) scale(${sc.toFixed(3)})`}
 function placeDom(){placeBoard();for(const bt of bots){const B=bubs[bt.n],tg=tags[bt.n];const txt=bt.say||status[bt.n]||'…';const html=`<b>${bt.n}</b>${esc(txt)}`;
   if(B._h!==html){B.innerHTML=html;B._h=html;B._w=B.offsetWidth;B._hh=B.offsetHeight}
   const p=toScreen(bt.x,bt.y-(bt.pose=='sit'?42:40)-(bt.emote?14:0));const w=B._w||100,h=B._hh||30;let x=p.x-w/2,y=p.y-h-8;
   const cx=Math.max(6,Math.min(vw-w-6,x)),cy=Math.max(6,Math.min(vh-h-6,y));B.style.setProperty('--tx',Math.max(-w/2+10,Math.min(w/2-10,x-cx))+'px');
-  B.style.transform=`translate(${cx|0}px,${cy|0}px)`;const vis=cam.z>=1.05&&p.x>4&&p.x<vw-4&&p.y>10&&p.y<vh+40;B.style.opacity=vis?1:0;B.style.zIndex=Math.round(bt.y);
-  const q=toScreen(bt.x,bt.y+3);tg.style.transform=`translate(${(q.x-(tg._w||(tg._w=tg.offsetWidth))/2)|0}px,${q.y|0}px)`;tg.style.opacity=cam.z>=1.05?1:0}}
+  B.style.transform=`translate(${cx|0}px,${cy|0}px)`;const vis=cam.z>=0.9&&p.x>4&&p.x<vw-4&&p.y>10&&p.y<vh+40;B.style.opacity=vis?1:0;B.style.zIndex=Math.round(bt.y);
+  const q=toScreen(bt.x,bt.y+3);tg.style.transform=`translate(${(q.x-(tg._w||(tg._w=tg.offsetWidth))/2)|0}px,${q.y|0}px)`;tg.style.opacity=cam.z>=0.9?1:0}}
 var frame=function(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;update(dt);
   if(ease){for(const k of['x','y','z'])cam[k]+=(tcam[k]-cam[k])*Math.min(1,dt*8);clampC(cam);if(Math.abs(tcam.z-cam.z)<.002&&Math.hypot(tcam.x-cam.x,tcam.y-cam.y)<.2)ease=false}
   else if(!ptrs.size&&(Math.abs(vel.x)+Math.abs(vel.y))>.05){cam.x-=vel.x;cam.y-=vel.y;vel.x*=.9;vel.y*=.9;clampC(cam)}
