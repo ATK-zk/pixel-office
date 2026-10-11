@@ -2,7 +2,8 @@
 <html lang="th"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b1d1f">
+<meta name="theme-color" content="#120c08">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Pixel Office · David Kim Jane</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Mali:wght@500;700&display=swap" rel="stylesheet">
@@ -11,22 +12,32 @@
 <canvas id="c"></canvas>
 <div id="bubbles"></div>
 <div id="tl" class="panel">
-  <div class="menu"><button data-f="David">👔<i>David</i></button><button data-f="Kim">📰<i>Kim</i></button><button data-f="Jane">📈<i>Jane</i></button><button id="bfit">🗺️<i>ทั้งห้อง</i></button></div>
-  <div class="me"><canvas id="meav" width="20" height="24"></canvas><div class="mebody"><b>PIXEL OFFICE</b>
-  <div class="bar"><span class="lbl">ทีม</span><span class="fill g" style="width:100%"></span><em>3/3 ออนไลน์</em></div>
-  <div class="bar"><span class="lbl">เวลา</span><span class="fill b" id="tbar"></span><em id="clock">--:--</em></div>
+  <div class="menu">
+    <button class="ib" data-f="David"><canvas class="mav" data-n="David" width="12" height="12"></canvas><i>David</i></button>
+    <button class="ib" data-f="Kim"><canvas class="mav" data-n="Kim" width="12" height="12"></canvas><i>Kim</i></button>
+    <button class="ib" data-f="Jane"><canvas class="mav" data-n="Jane" width="12" height="12"></canvas><i>Jane</i></button>
+    <button class="ib" id="bfit"><span>🗺️</span><i>ทั้งห้อง</i></button>
+  </div>
+  <div class="me"><div class="avw"><canvas id="meav" width="24" height="26"></canvas><span class="lv">LV 3</span></div><div class="mebody"><b>PIXEL OFFICE</b>
+  <div class="bar"><span class="fill g" style="width:100%"></span><span class="lbl">TEAM</span><em>3/3 ออนไลน์</em></div>
+  <div class="bar"><span class="fill b" id="tbar"></span><span class="lbl">DAY</span><em id="clock">--:--</em></div>
   <div id="upd" class="small">⏳ กำลังโหลด…</div></div></div>
 </div>
 <div id="tr">
-  <div class="panel mm"><canvas id="mini"></canvas><div class="cap">ห้องทำงาน · <span id="dn">กลางวัน</span></div></div>
-  <div class="panel tasks"><div class="th">TASKS <small>▾ แตะ</small></div><div id="tasklist"></div></div>
+  <div class="panel mm"><canvas id="mini"></canvas><div class="cap"><span id="dn">กลางวัน</span></div></div>
+  <div class="panel tasks"><div class="th"><span>✦ TASKS</span><small id="tt">▾</small></div><div id="tasklist"></div></div>
 </div>
-<div id="hint">ลากเพื่อเลื่อน · ถ่าง/ล้อเมาส์ซูม · แตะ 2 ครั้งรีเซ็ต</div>
-<div id="zoombar"><button id="zin" class="rb">＋</button><button id="zout" class="rb">－</button><button id="zreset" class="rb big">⟲</button></div>
-<div id="card" class="hidden">
+<div id="toasts"></div>
+<div id="hint">ลากเพื่อเลื่อน · ถ่างนิ้ว/ล้อเมาส์ซูม · แตะ 2 ครั้งรีเซ็ต</div>
+<div id="zoombar">
+  <button id="snd" class="rb sm" title="เสียง">🔇</button>
+  <button id="zin" class="rb">＋</button><button id="zout" class="rb">－</button><button id="zreset" class="rb big">⟲</button>
+</div>
+<div id="card" class="panel hidden">
   <button id="cardx">✕</button>
-  <canvas id="avatar" width="20" height="24"></canvas>
-  <div class="cbody"><div id="cname"></div><div id="crole"></div><div id="cstat"></div><div id="ctime"></div></div>
+  <div class="avw big"><canvas id="avatar" width="24" height="26"></canvas></div>
+  <div class="cbody"><div id="cname"></div><div id="crole"></div><div id="cstat"></div><div id="cact"></div><div id="ctime"></div></div>
 </div>
+<script src="art.js"></script>
 <script src="game.js"></script>
 </body></html>
