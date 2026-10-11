@@ -82,5 +82,7 @@ function riskCard(){const R=riskOf(ST);const bar=(v,m,t)=>{const f=Math.min(1,(v
 const _hit=hit;hit=function(sx,sy){const w=toWorld(sx,sy);for(const bt of bots){const dx=w.x-bt.x,dy=w.y-(bt.y-18);if(!bt.hidden&&Math.abs(dx)<14&&Math.abs(dy)<22)return _hit(sx,sy)}
   for(const[n,[a,b2,c,d]]of Object.entries(DESK))if(w.x>=a&&w.x<=c&&w.y>=b2&&w.y<=d){hideCard();return n=='Jane'?picksCard():n=='Alex'?planCard():n=='Su'?statsCard():riskCard()}$('info').classList.add('hidden');_hit(sx,sy)};
 // ---- phone framing: desks fill the screen ----
-homeCam=function(){if(vw<600){const z=Math.min(vw/385,(vh-190)/440);return{z,x:400,y:262}}const x0=196,x1=604;const z=Math.min(vw/(x1-x0),(vh-150)/450);return{z,x:400,y:(vh/2-84)/z}};
+homeCam=function(){if(vw<600){const z=Math.min(vw/385,(vh-190)/440);return{z,x:400,y:262}}const x0=196,x1=604;const z=Math.min(vw/(x1-x0),(vh-130)/576);return{z,x:400,y:H/2}};
+limits=function(){return{min:Math.min(vw/W,vh/H)*.7,max:7}};
+const _cc19=clampC;clampC=function(c){_cc19(c);const hh=vh/2/c.z;if(hh*2>=H)c.y=H/2-Math.min(80/c.z,hh-H/2)/2*1.0+0-(0);return c};
 resize.done=0;resize();Object.assign(tcam,cam);
