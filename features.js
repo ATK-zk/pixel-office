@@ -42,8 +42,8 @@ function liveNorm(s){try{const r=s.risk||{},c=r.mm_combined||{},el=r.mm_effectiv
  if(bots.length){const sum=(...k)=>{let t=0,any=false;for(const b of bots){const v=pick2(...k.map(x=>b[x]));if(v!=null){t+=v;any=true}}return any?t:null};
   const tr=sum('trades_today','fills_today','n_trades_today','trades');const old=s.stats||{};
   s.stats={...old,volume:sum('volume_today_usd','mm_volume_today_usd')??0,fees:sum('fees_today_usd','mm_fees_today_usd')??0,funding:sum('mm_funding_today_usd','funding_today_usd')??0,
-   pnl:sum('pnl_today_usd','mm_pnl_usd')??0,trades:tr,wins:sum('wins_today','wins'),losses:sum('losses_today','losses'),win_rate:null,
-   updated:bots.map(b=>String(b.updated||'')).sort().pop()||old.updated,daily_loss_limit:pick2(el.comb_daily,old.daily_loss_limit)}}
+   pnl:sum('pnl_today_usd','mm_pnl_usd')??0,trades:tr,wins:sum('wins_today','wins'),losses:sum('losses_today','losses'),win_rate:null,consec_stops:null,
+   updated:bots.map(b=>String(b.updated||'')).sort().pop()||old.updated,daily_loss_limit:pick2(el.comb_daily,old.daily_loss_limit)};const W=s.stats.wins||0,L=s.stats.losses||0;s.stats.win_rate=(W+L)>0?W/(W+L):null}
  }catch(e){}return s}
 async function poll2(){try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=liveNorm(await r.json());render();tick()}catch(e){}}
 poll2();setInterval(poll2,8000);
