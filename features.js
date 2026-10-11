@@ -44,8 +44,9 @@ function liveNorm(s){try{const L=s.live||{},lim=L.limits||{};
  }catch(e){}return s}
 var _logVolT=0;async function logVol(){if(Date.now()-_logVolT<60e3)return;_logVolT=Date.now();try{const r=await fetch('logs/live_trades.jsonl?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;const d0=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let v=0;
  for(const ln of (await r.text()).split('\n')){if(!ln.trim())continue;try{const x=JSON.parse(ln);if(x.tag=='test'||String(x.t||'').slice(0,10)!=d0)continue;v+=x.notional!=null?Math.abs(+x.notional):Math.abs(+x.qty||0)*(Math.abs(+x.entry||0)+Math.abs(+x.exit||0))}catch(e){}}window._logVol=v}catch(e){}}
-async function poll2(){logVol();try{const r=await fetch('status.json?f='+Date.now(),{cache:'no-store'});if(!r.ok)return;ST=liveNorm(await r.json());render();tick()}catch(e){}}
-poll2();setInterval(poll2,8000);
+window.getST=window.getST||(()=>{let c=null,t=0;return async()=>{if(c&&Date.now()-t<60000)return c;t=Date.now();c=(async()=>{try{const r=await fetch('https://api.github.com/repos/ATK-zk/pixel-office/contents/status.json?ref=main&t='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github.raw'}});if(r.ok)return await r.json()}catch(e){}const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;return await r.json()})();c.catch(()=>{c=null});return c}})();
+async function poll2(){logVol();try{ST=liveNorm(await window.getST());render();tick()}catch(e){}}
+poll2();setInterval(poll2,90000);
 // ---- ticker ----
 function evTime(e){if(!e)return null;const t=e.time||e.at||e.when||e.datetime||(typeof e=='string'?(e.match(/\d{4}-\d\d-\d\d[T ]\d\d:\d\d(:\d\d)?([+-]\d\d:?\d\d|Z)?/)||[])[0]:null);if(!t)return null;const u=String(t).trim().replace(' ','T');let d=new Date(/(Z|[+-]\d\d:?\d\d)$/.test(u)?u:u+'+07:00');return isNaN(d)?null:d}
 function tick(){if(!$('tkin'))return;const s=ST;let parts=[];if(s.headline)parts.push('📰 '+(typeof s.headline=='string'?s.headline:(s.headline.text||s.headline.title||'')));

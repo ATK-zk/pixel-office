@@ -295,7 +295,8 @@ function renderBoard(){$('board')._w=0;const v=+status.portfolio,st=+(status.por
 function renderTasks(changed){safe(renderBoard,'board');$('upd').textContent='🕒 อัปเดต '+(status.updated||'—');if(!$('tasklist'))return;$('tasklist').innerHTML=Object.keys(CH).map(n=>`<div class="task${changed.includes(n)?' new':''}" data-n="${n}" style="--c:${CH[n].col}"><b>● ${n}</b> <span class="d">${CH[n].role.split(' · ')[0]}</span><div>${esc(status[n]||'—')}</div></div>`).join('');
   document.querySelectorAll('.task').forEach(el=>el.onclick=()=>focusBot(el.dataset.n));$('upd').textContent='🕒 อัปเดต '+(status.updated||'—')}
 function toast(n,txt){const d=document.createElement('div');d.className='toast';d.style.setProperty('--c',CH[n].col);d.innerHTML=`<b>${n}</b> อัปเดตสถานะ · ${esc(txt)}`;$('toasts').appendChild(d);setTimeout(()=>d.remove(),4300);chime()}
-async function poll(){try{const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const s=await r.json();const changed=Object.keys(CH).filter(n=>s[n]!==status[n]);
+window.getST=window.getST||(()=>{let c=null,t=0;return async()=>{if(c&&Date.now()-t<60000)return c;t=Date.now();c=(async()=>{try{const r=await fetch('https://api.github.com/repos/ATK-zk/pixel-office/contents/status.json?ref=main&t='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github.raw'}});if(r.ok)return await r.json()}catch(e){}const r=await fetch('status.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;return await r.json()})();c.catch(()=>{c=null});return c}})();
+async function poll(){try{const s=await window.getST();const changed=Object.keys(CH).filter(n=>s[n]!==status[n]);
   if(!first)for(const n of changed){toast(n,s[n]);const bt=bots.find(x=>x.n==n);emote(bt,'!');bubs[n].classList.remove('flash');void bubs[n].offsetWidth;bubs[n].classList.add('flash')}
   status=(typeof liveNorm=='function'?liveNorm(s):s);renderTasks(first?[]:changed);fillCard();first=false}catch(e){$('upd').textContent='⚠️ โหลดสถานะไม่ได้'}}
 if(document.querySelector('.th'))document.querySelector('.th').onclick=()=>{document.querySelector('.tasks').classList.toggle('closed');$('tt').textContent=document.querySelector('.tasks').classList.contains('closed')?'▸':'▾'};
@@ -327,7 +328,7 @@ var frame=function(now){const dt=Math.min(.1,(now-last)/1000);last=now;time+=dt;
   const s=cam.z*dpr;ctx.setTransform(s,0,0,s,Math.round((vw/2-cam.x*cam.z)*dpr),Math.round((vh/2-cam.y*cam.z)*dpr));ctx.drawImage(world,0,0);
   placeDom();if((mt+=dt)>.2){mt=0;drawMini()}requestAnimationFrame(frame)}
 // ================= INIT =================
-safe(tickClock,'clock');safe(()=>{renderTasks([]);poll();setInterval(poll,8000)},'status');setInterval(()=>safe(tickClock,'clock'),1000);
+safe(tickClock,'clock');safe(()=>{renderTasks([]);poll();setInterval(poll,90000)},'status');setInterval(()=>safe(tickClock,'clock'),1000);
 safe(buildBG,'bg');safe(buildCity,'city');safe(buildProps,'props');
 safe(()=>{for(const p of PROPS){if(p.c.width>4)softShadow(b,p.x-p.ox+p.c.width/2,p.y-2,p.c.width*.45,4,.3)}},'shadows');
 safe(()=>{mbgG.imageSmoothingEnabled=true;wx.drawImage(bg,0,0);drawSky(wx);for(const p of PROPS)wx.drawImage(p.c,p.x-p.ox,p.y-p.oy);mbgG.drawImage(world,0,0,W/4,H/4)},'minibg');
