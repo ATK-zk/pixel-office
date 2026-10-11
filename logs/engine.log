@@ -99,3 +99,5 @@
 2026-10-11 23:00:00 SIGNAL vs bias, skipped {"key": "SOL-USD:breakout", "side": "long"}
 2026-10-11 23:00:00 SIGNAL vs bias, skipped {"key": "ETH-USD:breakout", "side": "long"}
 2026-10-11 23:00:01 SIGNAL SKIPPED {"key": "NEAR-USD:mean_reversion", "side": "short", "why": "cooldown 30m after close"}
+2026-10-11 23:06:44 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":6065500583511702,\"ts\":1791734804753,\"arts\":1791734804752}]"}
+2026-10-11 23:06:45 API {"path": "/v1/trade/orders", "status": 200, "body": "[{\"status\":\"ok\",\"oid\":5444783041365939,\"ts\":1791734804997,\"arts\":1791734804995}]"}
